@@ -16,6 +16,8 @@ import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
+import FormError from "@/components/form-error";
+import FormSuccess from "@/components/form-success";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -94,6 +96,8 @@ export function LoginForm() {
               )}
             />
           </div>
+          <FormError message="" />
+          <FormSuccess message="" />
           <Button
             className="w-full capitalize"
             type="submit"

@@ -91,6 +91,7 @@ body {
   --c5: #244483;
   --c6: #103071;
   --hue: calc(30deg - (30deg * var(--clr)));
+  --clr: 1;
 }
 
 body {
