@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useTransition } from "react";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -18,8 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
+import { login } from "@/actions/login";
 
 export function LoginForm() {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     mode: "onChange",
@@ -30,7 +34,14 @@ export function LoginForm() {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+    startTransition(() => {
+      login(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
+    });
   };
 
   return (
@@ -58,6 +69,7 @@ export function LoginForm() {
                         autoComplete="email"
                         aria-label="Email input"
                         required
+                        disabled={isPending}
                         error={form.formState.errors.email?.message}
                         isValid={!form.formState.errors.email && !!field.value}
                       />
@@ -83,6 +95,7 @@ export function LoginForm() {
                         autoComplete="password"
                         aria-label="Password input"
                         required
+                        disabled={isPending}
                         minLength={6}
                         error={form.formState.errors.password?.message}
                         isValid={
@@ -96,15 +109,15 @@ export function LoginForm() {
               )}
             />
           </div>
-          <FormError message="" />
-          <FormSuccess message="" />
+          <FormError message={error} />
+          <FormSuccess message={success} />
           <Button
             className="w-full capitalize"
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isPending}
           >
-            {form.formState.isSubmitting ? (
-              <span>
+            {isPending ? (
+              <span className="flex gap-2 items-center justify-center transition-all">
                 <Loader className="animate-spin" /> Submitting...
               </span>
             ) : (
