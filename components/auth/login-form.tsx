@@ -14,14 +14,13 @@ import {
 } from "@/components/ui/form";
 import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
-import { AlertCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { log } from "console";
+import { Loader } from "lucide-react";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
-    mode: "onTouched",
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -52,25 +51,14 @@ export function LoginForm() {
                     <div className="relative">
                       <Input
                         {...field}
-                        placeholder="name@exmaple.com"
+                        placeholder="name@example.com"
                         type="email"
                         autoComplete="email"
                         aria-label="Email input"
                         required
-                        className={
-                          form.formState.errors.email
-                            ? "border-destructive border-2 focus-visible:ring-destructive"
-                            : form.formState.isValid
-                            ? "border-success border-2 focus-visible:ring-success "
-                            : undefined
-                        }
+                        error={form.formState.errors.email?.message}
+                        isValid={!form.formState.errors.email && !!field.value}
                       />
-                      {form.formState.errors.email && (
-                        <AlertCircle className="absolute right-2 top-1.5 text-destructive" />
-                      )}
-                      {form.formState.isValid && (
-                        <Check className="absolute right-2 top-1.5 text-success" />
-                      )}
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -94,20 +82,11 @@ export function LoginForm() {
                         aria-label="Password input"
                         required
                         minLength={6}
-                        className={
-                          form.formState.errors.password
-                            ? "border-destructive border-2 focus-visible:ring-destructive"
-                            : form.formState.isValid
-                            ? "border-success border-2 focus-visible:ring-success "
-                            : undefined
+                        error={form.formState.errors.password?.message}
+                        isValid={
+                          !form.formState.errors.password && !!field.value
                         }
                       />
-                      {form.formState.errors.password && (
-                        <AlertCircle className="absolute right-2 top-1.5 text-destructive" />
-                      )}
-                      {form.formState.isValid && (
-                        <Check className="absolute right-2 top-1.5 text-success" />
-                      )}
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -115,8 +94,18 @@ export function LoginForm() {
               )}
             />
           </div>
-          <Button type="submit" className="w-full capitalize">
-            login
+          <Button
+            className="w-full capitalize"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? (
+              <span>
+                <Loader className="animate-spin" /> Submitting...
+              </span>
+            ) : (
+              "Login"
+            )}
           </Button>
         </form>
       </Form>
