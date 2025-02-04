@@ -1,11 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Varela+Round&display=swap");
+
 :root {
-  --c0: #71a1ff;
-  --c1: #4d85f6;
-  --c2: #3b72e2;
-  --c3: #336de2;
-  --c4: #2151af;
-  --c5: #244483;
-  --c6: #103071;
+  --c0: hsl(6 81% 64%); /* Lighter */
+  --c1: hsl(6 81% 54%); /* Slightly lighter */
+  --c2: hsl(6 81% 49%); /* Slightly lighter */
+  --c3: hsl(6 81% 44%); /* Original */
+  --c4: hsl(6 81% 39%); /* Slightly darker */
+  --c5: hsl(6 81% 34%); /* Darker */
+  --c6: hsl(6 81% 29%); /* Darkest */
   --hue: calc(30deg - (30deg * var(--clr)));
   --clr: 1;
 }
@@ -30,7 +32,7 @@ body {
 }
 
 .cuboid {
-  --size: 250;
+  --size: 320;
   height: calc(var(--size) * 1vmin);
   width: calc(var(--size) * 1vmin);
   position: absolute;
@@ -267,9 +269,9 @@ body {
 .btn a {
   border-radius: 0.2vmin;
   padding: 1.5vmin 2.5vmin;
-  background: #528cff;
+  background: var(--destructive);
   text-decoration: none;
-  color: #fff9;
+  color: rgb(255, 255, 255);
   top: 0;
   font-size: 3vmin;
   text-shadow: 0px -2px 2px var(--c0), 0px 1px 3px var(--c6);

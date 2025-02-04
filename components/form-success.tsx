@@ -10,7 +10,7 @@ export default function FormSuccess({ message }: FormSuccessProps) {
   return (
     <Alert variant={"destructive"}>
       <AlertDescription className="flex">
-        <CheckCircle2 size={36} />
+        <CheckCircle2 size={24} />
         <span className="ml-4">{message}</span>
       </AlertDescription>
     </Alert>

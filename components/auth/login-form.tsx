@@ -61,7 +61,7 @@ export function LoginForm() {
     <CardWrapper
       headerLabel="Welcome back!"
       headerDescription="Login with your Apple or Google account"
-      backButtonLabel="Don't have an account?"
+      backButtonLabel="Don't have an account? Sign up"
       backButtonHref="/auth/register"
       showSocial
     >
