@@ -1,13 +1,20 @@
 import React from "react";
+import { CardDescription, CardHeader, CardTitle } from "../ui/card";
 interface HeaderProps {
   label: string;
+  description?: string;
 }
 
-export default function Header({ label }: HeaderProps) {
+export default function Header({ label, description }: HeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-y-2 items-center justify-center">
-      <h1 className={"text-3xl font-semibold"}>Auth</h1>
-      <p className="text-muted-foreground text-sm"> {label} </p>
-    </div>
+    <CardHeader className="text-center mt-4">
+      <CardTitle className="text-2xl font-bold  text-balance text-foreground">
+        {label}
+      </CardTitle>
+      {description && (
+        <CardDescription className="">{description}</CardDescription>
+      )}
+    </CardHeader>
   );
 }
+// bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-balance text-sm text-transparent "

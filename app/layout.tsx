@@ -20,14 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          `antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary to-secondary`,
-          font.className
-        )}
-      >
-        {children}
-      </body>
+      <body className={cn(`antialiased `, font.className)}>{children}</body>
     </html>
   );
 }
+// bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary to-secondary

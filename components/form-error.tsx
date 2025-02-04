@@ -1,5 +1,6 @@
 import React from "react";
 import { BiError } from "react-icons/bi";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface FormErrorProps {
   message?: string;
@@ -7,9 +8,12 @@ interface FormErrorProps {
 export default function FormError({ message }: FormErrorProps) {
   if (!message) return null;
   return (
-    <div className="bg-destructive/15 p-3 px-5 rounded-md flex items-center gap-x-2 text-sm text-destructive">
-      <BiError className="h-5 w-5 mr-2" />
-      <p> {message} </p>
-    </div>
+    <Alert variant={"destructive"}>
+      <AlertDescription className="flex items-center">
+        {" "}
+        <BiError className="h-5 w-5 mr-2" />
+        {message}{" "}
+      </AlertDescription>
+    </Alert>
   );
 }
