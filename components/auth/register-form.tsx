@@ -15,12 +15,23 @@ import {
 import { RegisterSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { register } from "@/actions/register";
+import { useSearchParams } from "next/navigation";
+import { errorMessages } from "@/data/error-messages";
 
 export function RegisterForm() {
+  const searchParams = useSearchParams();
+  const authError = searchParams.get("error") as
+    | keyof typeof errorMessages
+    | null;
+
+  const urlError = authError
+    ? errorMessages[authError] || errorMessages.Default
+    : "";
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -126,6 +137,22 @@ export function RegisterForm() {
                           !form.formState.errors.password && !!field.value
                         }
                       />
+                      <Button
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <EyeIcon className="h-4 w-4" aria-hidden="true" />
+                        )}
+                        <span className="sr-only">
+                          {showPassword ? "Hide password" : "Show password"}
+                        </span>
+                      </Button>
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -133,7 +160,7 @@ export function RegisterForm() {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button className="w-full " type="submit" disabled={isPending}>
             {isPending ? (

@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useSearchParams } from "next/navigation";
 import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,17 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { login } from "@/actions/login";
 import Link from "next/link";
+import { errorMessages } from "@/data/error-messages";
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const authError = searchParams.get("error") as
+    | keyof typeof errorMessages
+    | null;
+
+  const urlError = authError
+    ? errorMessages[authError] || errorMessages.Default
+    : "";
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
@@ -40,8 +50,9 @@ export function LoginForm() {
     setSuccess("");
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        // TODO : add when we add 2FA
+        // setSuccess(data?.success);
       });
     });
   };
@@ -59,8 +70,6 @@ export function LoginForm() {
           className={"flex flex-col gap-10"}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <FormError message={error} />
-          <FormSuccess message={success} />
           <div className="grid gap-6">
             {/* ---------------EMAIL------------------ */}
             <FormField
@@ -148,7 +157,8 @@ export function LoginForm() {
             />
             {/* ------------ */}
           </div>
-
+          <FormError message={error || urlError} />
+          <FormSuccess message={success} />
           <Button
             className="w-full capitalize"
             type="submit"

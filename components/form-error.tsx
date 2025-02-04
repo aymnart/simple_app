@@ -9,10 +9,9 @@ export default function FormError({ message }: FormErrorProps) {
   if (!message) return null;
   return (
     <Alert variant={"destructive"}>
-      <AlertDescription className="flex items-center">
-        {" "}
-        <BiError className="h-5 w-5 mr-2" />
-        {message}{" "}
+      <AlertDescription className="flex">
+        <BiError size={36} />
+        <span className="ml-4">{message}</span>
       </AlertDescription>
     </Alert>
   );

@@ -1,5 +1,5 @@
 "use client";
-
+import "@/css/not-found.css";
 import Link from "next/link";
 
 export default function NotFound() {

@@ -8,11 +8,10 @@ interface FormSuccessProps {
 export default function FormSuccess({ message }: FormSuccessProps) {
   if (!message) return null;
   return (
-    <Alert variant={"success"}>
-      <AlertDescription className="flex items-center">
-        {" "}
-        <CheckCircle2 className="h-5 w-5 mr-2" />
-        {message}{" "}
+    <Alert variant={"destructive"}>
+      <AlertDescription className="flex">
+        <CheckCircle2 size={36} />
+        <span className="ml-4">{message}</span>
       </AlertDescription>
     </Alert>
   );

@@ -12,7 +12,7 @@ export function Social() {
     startTransition(() => {
       signIn(provider, {
         callbackUrl: LOGIN_DEFAULT_REDIRECT,
-      }).then();
+      });
     });
   };
 

@@ -26,7 +26,7 @@ export function CardWrapper({
   className,
 }: CardWrapperProps) {
   return (
-    <Card className={cn("w-96 shadow-lg", className)}>
+    <Card className={cn("w-96 border-0 shadow-none", className)}>
       <Header description={headerDescription} label={headerLabel} />
 
       <CardContent>{showSocial && <Social />}</CardContent>
