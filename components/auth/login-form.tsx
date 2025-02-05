@@ -51,8 +51,7 @@ export function LoginForm() {
     startTransition(() => {
       login(values).then((data) => {
         setError(data?.error);
-        // TODO : add when we add 2FA
-        // setSuccess(data?.success);
+        setSuccess(data?.success);
       });
     });
   };
@@ -121,7 +120,7 @@ export function LoginForm() {
                     <div className="relative">
                       <Input
                         {...field}
-                        placeholder="******"
+                        placeholder="*******"
                         type={showPassword ? "text" : "password"}
                         autoComplete="password"
                         aria-label="Password input"

@@ -126,8 +126,8 @@ export function RegisterForm() {
                     <div className="relative">
                       <Input
                         {...field}
-                        placeholder="******"
-                        type="password"
+                        placeholder="*******"
+                        type={showPassword ? "text" : "password"}
                         autoComplete="password"
                         aria-label="Password input"
                         disabled={isPending}
