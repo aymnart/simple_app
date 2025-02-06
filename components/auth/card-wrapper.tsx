@@ -12,6 +12,16 @@ interface CardWrapperProps {
   headerDescription?: string;
   backButtonLabel: string;
   backButtonHref: string;
+  backButtonVariant?:
+    | "link"
+    | "default"
+    | "success"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
   showSocial?: boolean;
   className?: string;
 }
@@ -22,6 +32,7 @@ export function CardWrapper({
   headerDescription,
   backButtonHref,
   backButtonLabel,
+  backButtonVariant,
   showSocial,
   className,
 }: CardWrapperProps) {
@@ -33,7 +44,11 @@ export function CardWrapper({
       <CardContent>{children}</CardContent>
 
       <CardFooter>
-        <BackButton label={backButtonLabel} href={backButtonHref} />
+        <BackButton
+          buttonVariant={backButtonVariant}
+          label={backButtonLabel}
+          href={backButtonHref}
+        />
       </CardFooter>
     </Card>
   );

@@ -3,7 +3,7 @@
  * Public routes are accessible without authentication.
  * @type {string[]}
  */
-export const publicRoutes: string[] = ["/"];
+export const publicRoutes: string[] = ["/", "/auth/new-verification"];
 
 /**
  * An array to hold the authentication routes for the application.

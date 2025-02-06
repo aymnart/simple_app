@@ -11,9 +11,7 @@ export default function Header({ label, description }: HeaderProps) {
       <CardTitle className="text-2xl font-bold  text-balance text-foreground">
         {label}
       </CardTitle>
-      {description && (
-        <CardDescription className="">{description}</CardDescription>
-      )}
+      {description && <CardDescription>{description}</CardDescription>}
     </CardHeader>
   );
 }
