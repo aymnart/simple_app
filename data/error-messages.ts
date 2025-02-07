@@ -1,4 +1,4 @@
-export const errorMessages = {
+export const authErrorMessages = {
   AccessDenied:
     "Access denied. You do not have permission to access this resource.",
   AccountNotLinked: "Email already in use with a different provider!",
@@ -8,7 +8,7 @@ export const errorMessages = {
   CallbackRouteError:
     "There was an issue during the callback process. Please try again.",
   CredentialsSignin:
-    "Invalid credentials. Please check your username and password.",
+    "Invalid credentials. Please check your email and password.",
   DuplicateConditionalUI:
     "Multiple providers have conditional UI enabled. Please contact support.",
   EmailSignInError:

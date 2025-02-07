@@ -20,16 +20,16 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { register } from "@/actions/register";
 import { useSearchParams } from "next/navigation";
-import { errorMessages } from "@/data/error-messages";
+import { authErrorMessages } from "@/data/error-messages";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();
   const authError = searchParams.get("error") as
-    | keyof typeof errorMessages
+    | keyof typeof authErrorMessages
     | null;
 
   const urlError = authError
-    ? errorMessages[authError] || errorMessages.Default
+    ? authErrorMessages[authError] || authErrorMessages.Default
     : "";
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();

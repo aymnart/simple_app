@@ -21,16 +21,16 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { login } from "@/actions/login";
 import Link from "next/link";
-import { errorMessages } from "@/data/error-messages";
+import { authErrorMessages } from "@/data/error-messages";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
   const authError = searchParams.get("error") as
-    | keyof typeof errorMessages
+    | keyof typeof authErrorMessages
     | null;
 
   const urlError = authError
-    ? errorMessages[authError] || errorMessages.Default
+    ? authErrorMessages[authError] || authErrorMessages.Default
     : "";
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
@@ -62,6 +62,7 @@ export function LoginForm() {
       headerDescription="Login with your Apple or Google account"
       backButtonLabel="Don't have an account? Sign up"
       backButtonHref="/auth/register"
+      className="bg-transparent"
       showSocial
     >
       <Form {...form}>

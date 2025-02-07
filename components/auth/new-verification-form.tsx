@@ -38,7 +38,7 @@ export default function NewVerificationForm() {
     <CardWrapper
       headerLabel="Confirming your verification"
       headerDescription="We're verifying your email address"
-      backButtonLabel="< Back to login"
+      backButtonLabel="Back to login"
       backButtonHref="/auth/login"
       backButtonVariant={"default"}
     >

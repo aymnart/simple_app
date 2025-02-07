@@ -7,30 +7,28 @@ import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail } from "@/lib/mail";
+import { authErrorMessages } from "@/data/error-messages";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields" };
+    return {
+      error: "Validation error",
+      details: validatedFields.error.flatten(),
+    };
   }
-  const { email, password } = validatedFields.data;
 
+  const { email, password } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
-  if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: "User not found or missing credentials!" };
+
+  if (!existingUser) {
+    return { error: "Invalid email or password!" };
   }
 
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(
-      existingUser.email
-    );
-
-    await sendVerificationEmail(
-      verificationToken.email,
-      verificationToken.token
-    );
-
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(email, verificationToken.token);
     return { success: "Confirmation email sent!" };
   }
 
@@ -40,14 +38,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       password,
       redirectTo: LOGIN_DEFAULT_REDIRECT,
     });
+    return { success: "Login successful!" };
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials!" };
-        default:
-          return { error: "Something went wrong!" };
-      }
+      const errorMsg =
+        authErrorMessages[error.type] || authErrorMessages.Default;
+      return { error: errorMsg };
     }
     throw error;
   }

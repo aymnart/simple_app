@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ label, description }: HeaderProps) {
   return (
-    <CardHeader className="text-center mt-4">
+    <CardHeader className="text-center mt-2">
       <CardTitle className="text-2xl font-bold  text-balance text-foreground">
         {label}
       </CardTitle>
