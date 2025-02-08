@@ -1,7 +1,7 @@
 import React from "react";
-import { BiError } from "react-icons/bi";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
+import { AlertCircle } from "lucide-react";
 
 interface FormErrorProps {
   message?: string;
@@ -12,7 +12,7 @@ export default function FormError({ message, className }: FormErrorProps) {
   return (
     <Alert className={cn(className)} variant={"destructive"}>
       <AlertDescription className="flex items-start">
-        <BiError size={24} />
+        <AlertCircle size={24} />
         <span className="ml-4">{message}</span>
       </AlertDescription>
     </Alert>

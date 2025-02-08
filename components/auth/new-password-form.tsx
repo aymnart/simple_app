@@ -12,41 +12,32 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { RegisterSchema } from "@/schemas";
+import { NewPasswordSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
-import { register } from "@/actions/register";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
+import { newPassword } from "@/actions/new-password";
 import { useSearchParams } from "next/navigation";
-import { authErrorMessages } from "@/data/error-messages";
 
-export function RegisterForm() {
-  const searchParams = useSearchParams();
-  const authError = searchParams.get("error") as
-    | keyof typeof authErrorMessages
-    | null;
-
-  const urlError = authError
-    ? authErrorMessages[authError] || authErrorMessages.Default
-    : "";
+export function NewPasswordForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const form = useForm<z.infer<typeof NewPasswordSchema>>({
+    resolver: zodResolver(NewPasswordSchema),
     mode: "onChange",
     defaultValues: {
-      email: "",
       password: "",
-      confirmPassword: "",
-      name: "",
+      confirmPassword: "", // Add confirmPassword to default values
     },
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
     setError("");
     setSuccess("");
     if (values.password !== values.confirmPassword) {
@@ -55,78 +46,26 @@ export function RegisterForm() {
       return;
     }
     startTransition(() => {
-      register(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+      newPassword(values, token).then((data) => {
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
-      backButtonLabel="Already have an account? Sign in"
+      headerLabel="Enter a new password"
+      backButtonLabel="Back to login"
       backButtonHref="/auth/login"
-      showSocial
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            {/* ---------------NAME--------------- */}
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Name <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        placeholder="name"
-                        type="text"
-                        autoComplete="name"
-                        aria-label="name input"
-                        disabled={isPending}
-                        error={form.formState.errors.name?.message}
-                        isValid={!form.formState.errors.name && !!field.value}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* ----------------EMAIL----------------- */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Email <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        placeholder="name@example.com"
-                        type="email"
-                        autoComplete="email"
-                        aria-label="Email input"
-                        disabled={isPending}
-                        error={form.formState.errors.email?.message}
-                        isValid={!form.formState.errors.email && !!field.value}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* ----------------PASSWORD----------------- */}
+        <form
+          className={"flex flex-col gap-10"}
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className="grid gap-6">
+            {/* ---------------Password------------------ */}
             <FormField
               control={form.control}
               name="password"
@@ -203,16 +142,21 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
+            {/* --------------------- */}
           </div>
-          <FormError message={error || urlError} />
+          <FormError message={error} />
           <FormSuccess message={success} />
-          <Button className="w-full " type="submit" disabled={isPending}>
+          <Button
+            className="w-full capitalize"
+            type="submit"
+            disabled={isPending}
+          >
             {isPending ? (
               <span className="flex gap-2 items-center justify-center transition-all">
                 <Loader className="animate-spin" />
               </span>
             ) : (
-              "Create an account"
+              "Reset password"
             )}
           </Button>
         </form>
@@ -220,3 +164,102 @@ export function RegisterForm() {
     </CardWrapper>
   );
 }
+
+// <CardWrapper
+//   headerLabel="Welcome back!"
+//   backButtonLabel="Don't have an account?"
+//   backButtonHref="/auth/register"
+//   showSocial
+// >
+//   <Form {...form}>
+//     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+//       <div className="space-y-4">
+//         <FormField
+//           control={form.control}
+//           name="email"
+//           render={({ field }) => (
+//             <FormItem>
+//               <FormLabel>Email</FormLabel>
+//               <FormControl>
+//                 <div className="relative">
+//                   <Input
+//                     {...field}
+//                     placeholder="name@example.com"
+//                     type="email"
+//                     autoComplete="email"
+//                     aria-label="Email input"
+//                     required
+//                     disabled={isPending}
+//                     error={form.formState.errors.email?.message}
+//                     isValid={!form.formState.errors.email && !!field.value}
+//                   />
+//                 </div>
+//               </FormControl>
+//               <FormMessage />
+//             </FormItem>
+//           )}
+//         />
+//         {/* ------------------ */}
+//         <FormField
+//           control={form.control}
+//           name="password"
+//           render={({ field }) => (
+//             <FormItem>
+//               <FormLabel>Password</FormLabel>
+//               <FormControl>
+//                 <div className="relative">
+//                   <Input
+//                     {...field}
+//                     placeholder="******"
+//                     type={showPassword ? "text" : "password"}
+//                     autoComplete="password"
+//                     aria-label="Password input"
+//                     required
+//                     disabled={isPending}
+//                     minLength={6}
+//                     error={form.formState.errors.password?.message}
+//                     isValid={
+//                       !form.formState.errors.password && !!field.value
+//                     }
+//                   />
+//                   <Button
+//                     type="button"
+//                     variant="ghost"
+//                     size="sm"
+//                     className="absolute right-2 top-1/2 -translate-y-1/2"
+//                     onClick={() => setShowPassword(!showPassword)}
+//                   >
+//                     {showPassword ? (
+//                       <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
+//                     ) : (
+//                       <EyeIcon className="h-4 w-4" aria-hidden="true" />
+//                     )}
+//                     <span className="sr-only">
+//                       {showPassword ? "Hide password" : "Show password"}
+//                     </span>
+//                   </Button>
+//                 </div>
+//               </FormControl>
+//               <FormMessage />
+//             </FormItem>
+//           )}
+//         />
+//       </div>
+//       <FormError message={error} />
+//       <FormSuccess message={success} />
+//       <Button
+//         className="w-full capitalize"
+//         type="submit"
+//         disabled={isPending}
+//       >
+//         {isPending ? (
+//           <span className="flex gap-2 items-center justify-center transition-all">
+//             <Loader className="animate-spin" /> Submitting...
+//           </span>
+//         ) : (
+//           "Login"
+//         )}
+//       </Button>
+//     </form>
+//   </Form>
+// </CardWrapper>
