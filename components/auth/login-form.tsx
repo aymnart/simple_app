@@ -77,12 +77,13 @@ export function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="email">
                     Email <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="email"
                         {...field}
                         placeholder="name@example.com"
                         type="email"
@@ -106,7 +107,7 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>
+                    <FormLabel htmlFor="password">
                       Password <span className="text-destructive">*</span>
                     </FormLabel>
                     <Link
@@ -119,10 +120,11 @@ export function LoginForm() {
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="password"
                         {...field}
                         placeholder="*******"
                         type={showPassword ? "text" : "password"}
-                        autoComplete="password"
+                        autoComplete="current-password"
                         aria-label="Password input"
                         required
                         disabled={isPending}

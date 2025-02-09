@@ -39,10 +39,10 @@ export function RegisterForm() {
     resolver: zodResolver(RegisterSchema),
     mode: "onChange",
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
-      name: "",
     },
   });
 
@@ -78,12 +78,13 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="name">
                     Name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="name"
                         {...field}
                         placeholder="name"
                         type="text"
@@ -105,12 +106,13 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="email">
                     Email <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="email"
                         {...field}
                         placeholder="name@example.com"
                         type="email"
@@ -132,16 +134,17 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="password">
                     Password <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="password"
                         {...field}
                         placeholder="*******"
                         type={showPassword ? "text" : "password"}
-                        autoComplete="password"
+                        autoComplete="current-password"
                         aria-label="Password input"
                         disabled={isPending}
                         minLength={6}
@@ -178,16 +181,16 @@ export function RegisterForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="confirmPassword">
                     Confirm Password <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="confirmPassword"
                         {...field}
                         placeholder="*******"
                         type={"password"}
-                        autoComplete="password"
                         aria-label="Confirm Password input"
                         disabled={isPending}
                         minLength={6}

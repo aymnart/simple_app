@@ -71,16 +71,17 @@ export function NewPasswordForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="password">
                     Password <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="password"
                         {...field}
                         placeholder="*******"
                         type={showPassword ? "text" : "password"}
-                        autoComplete="password"
+                        autoComplete="new-password"
                         aria-label="Password input"
                         disabled={isPending}
                         minLength={6}
@@ -117,16 +118,17 @@ export function NewPasswordForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel htmlFor="confirmPassword">
                     Confirm Password <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        id="confirmPassword"
                         {...field}
                         placeholder="*******"
                         type={"password"}
-                        autoComplete="password"
+                        autoComplete="new-password"
                         aria-label="Confirm Password input"
                         disabled={isPending}
                         minLength={6}

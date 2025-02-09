@@ -47,18 +47,18 @@ export default function RegisterPage() {
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="relative flex flex-1 flex-col items-center justify-center lg:w-full w-screen">
+      <div className="flex justify-center items-center lg:w-full w-screen">
         <RegisterForm />
       </div>
 
       <div className="relative hidden lg:block">
         <Image
           src={"/man-computer.jpg"}
-          alt="Students collaborating in a modern classroom"
+          alt="Man sitting on a computer"
           className="h-full object-cover dark:brightness-[0.7] dark:grayscale"
           width={6000}
           height={4000}
-          loading="lazy"
+          priority={true}
         />
         <div className=" absolute inset-0 bg-gradient-to-t from-foreground/40 via-foreground/20 to-foreground/20 dark:from-background/90 dark:via-background/50 dark:to-background/30" />
         <div className="absolute bottom-0 left-0 right-0 text-white p-6 text-center">
