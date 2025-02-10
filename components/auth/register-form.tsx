@@ -49,11 +49,6 @@ export function RegisterForm() {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     setSuccess("");
-    if (values.password !== values.confirmPassword) {
-      // Add password match validation
-      setError("Passwords do not match");
-      return;
-    }
     startTransition(() => {
       register(values).then((data) => {
         setError(data.error);
@@ -144,7 +139,7 @@ export function RegisterForm() {
                         {...field}
                         placeholder="*******"
                         type={showPassword ? "text" : "password"}
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         aria-label="Password input"
                         disabled={isPending}
                         minLength={6}
@@ -191,6 +186,7 @@ export function RegisterForm() {
                         {...field}
                         placeholder="*******"
                         type={"password"}
+                        autoComplete="new-password"
                         aria-label="Confirm Password input"
                         disabled={isPending}
                         minLength={6}
