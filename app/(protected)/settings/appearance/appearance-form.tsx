@@ -22,12 +22,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { appearanceFormSchema } from "@/schemas";
 import { updateAppearancePreferences } from "@/actions/preferences";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { getUserPreferenceById } from "@/data/user";
 import { fontsList } from "@/data/fonts";
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
-export function AppearanceForm() {
+type AppearanceFormProps = {
+  theme: string;
+  font: string;
+};
+
+export function AppearanceForm({ theme, font }: AppearanceFormProps) {
   const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();
   const [defaultValues, setDefaultValues] =
@@ -37,22 +41,14 @@ export function AppearanceForm() {
   useEffect(() => {
     async function fetchPreferences() {
       if (user?.id) {
-        const userPreference = await getUserPreferenceById(user.id);
         setDefaultValues({
-          theme:
-            userPreference?.theme === "light" ||
-            userPreference?.theme === "dark"
-              ? userPreference.theme
-              : "light",
-          font:
-            userPreference && fontsList.includes(userPreference.font)
-              ? userPreference.font
-              : fontsList[0],
+          theme: theme === "light" || theme === "dark" ? theme : "light",
+          font: fontsList.includes(font) ? font : fontsList[0],
         });
       }
     }
     fetchPreferences();
-  }, [user?.id]);
+  }, [user?.id, theme, font]);
 
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
@@ -108,7 +104,6 @@ export function AppearanceForm() {
                     {...field}
                     defaultValue={defaultValues.font}
                   >
-                    <option value="inter">Choose font</option>
                     {fontsList.map((el, index) => (
                       <option value={el} key={index}>
                         {el}

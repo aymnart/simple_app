@@ -20,10 +20,10 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
-export const getUserPreferenceById = async (id: string) => {
+export const getUserPreferenceById = async (userId: string) => {
   try {
     const userPreference = await db.userPreference.findUnique({
-      where: { userId: id },
+      where: { userId: userId },
     });
     return userPreference;
   } catch {

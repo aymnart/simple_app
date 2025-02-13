@@ -1,7 +1,21 @@
 import { Separator } from "@/components/ui/separator";
 import { AppearanceForm } from "./appearance-form";
+import { getUserPreferenceById } from "@/data/user";
+import { auth } from "@/auth";
 
-export default function SettingsAppearancePage() {
+export default async function SettingsAppearancePage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return <p>You need to be logged in to edit preferences.</p>;
+  }
+
+  const userPreference = await getUserPreferenceById(userId);
+
+  const theme = userPreference?.theme || "light";
+  const font = userPreference?.font || "inter";
+
   return (
     <div className="space-y-6">
       <div>
@@ -12,7 +26,7 @@ export default function SettingsAppearancePage() {
         </p>
       </div>
       <Separator />
-      <AppearanceForm />
+      <AppearanceForm theme={theme} font={font} />
     </div>
   );
 }
