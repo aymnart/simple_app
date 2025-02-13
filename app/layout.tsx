@@ -19,6 +19,7 @@ export default async function RootLayout({
     const userPref = await getUserPreferenceById(user.id);
     theme = userPref?.theme || "light";
     font = userPref?.font || "inter";
+    console.log(fontMap[font]);
   }
 
   return (

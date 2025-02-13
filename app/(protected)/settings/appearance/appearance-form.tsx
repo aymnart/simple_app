@@ -136,7 +136,6 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
                 onValueChange={field.onChange}
                 value={field.value}
                 className="grid max-w-md grid-cols-2 gap-8 pt-2"
-                defaultValue={defaultValues.theme}
               >
                 <FormItem>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
