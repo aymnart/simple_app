@@ -80,3 +80,10 @@ enum UserRole {
   ADMIN
   USER
 }
+
+model UserPreference {
+  id    String @id @default(uuid())
+  userId String @unique
+  theme String
+  font  String
+}

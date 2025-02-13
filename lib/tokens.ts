@@ -7,8 +7,8 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
 export const generateTwoFactorToken = async (email: string) => {
   const token = crypto.randomInt(100_000, 1_000_000).toString();
-  //TODO: CHANGE THE CONFIRMATION TOKEN EXPIRING TIME TO 15 MINS
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
+  // Set the confirmation token expiry time to 5 minutes
+  const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
   const existingToken = await getTwoFactorTokenByEmail(email);
   if (existingToken) {
     await db.twoFactorToken.delete({
@@ -28,6 +28,7 @@ export const generateTwoFactorToken = async (email: string) => {
 
 export const generatePasswordResetToken = async (email: string) => {
   const token = uuidv4();
+  // Set the password reset token expiry time to 1 hour
   const expires = new Date(new Date().getTime() + 3600 * 1000);
   const existingToken = await getPasswordResetTokenByEmail(email);
   if (existingToken) {

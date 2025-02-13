@@ -37,11 +37,16 @@ export function CardWrapper({
   className,
 }: CardWrapperProps) {
   return (
-    <Card className={cn("w-96 h-full border-0 shadow-none", className)}>
+    <Card
+      className={cn(
+        "w-96 grid justify-center items-center border-none shadow-none",
+        className
+      )}
+    >
       <Header description={headerDescription} label={headerLabel} />
 
       {showSocial && (
-        <CardContent>
+        <CardContent className="pb-0">
           <Social />
         </CardContent>
       )}

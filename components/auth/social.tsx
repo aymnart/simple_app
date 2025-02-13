@@ -19,7 +19,7 @@ export function Social() {
 
   return (
     <div className="grid gap-6">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4">
         <Button
           onClick={() => {
             onClick("github");
@@ -38,7 +38,7 @@ export function Social() {
                 height={16}
                 alt={"github logo"}
               />
-              Login with Github
+              Github Login
             </div>
           )}
         </Button>
@@ -60,7 +60,7 @@ export function Social() {
                 height={16}
                 alt={"google logo"}
               />
-              Login with Google
+              Google Login
             </div>
           )}
         </Button>

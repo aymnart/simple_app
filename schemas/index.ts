@@ -1,5 +1,5 @@
 import * as z from "zod";
-
+import { fontsList } from "@/data/fonts";
 export const NewPasswordSchema = z
   .object({
     password: z
@@ -52,3 +52,13 @@ export const RegisterSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const appearanceFormSchema = z.object({
+  theme: z.enum(["light", "dark", "system"], {
+    required_error: "Please select a theme.",
+  }),
+  font: z.enum(fontsList as [string, ...string[]], {
+    invalid_type_error: "Select a font",
+    required_error: "Please select a font.",
+  }),
+});

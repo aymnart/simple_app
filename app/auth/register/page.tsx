@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { RegisterForm } from "@/components/auth/register-form";
+import useDocumentTitle from "@/hooks/use-document-title";
 
 const marketingPhrases = [
   "Revolutionize your workflow with an AI-optimized inbox that learns your priorities and acts on them.",
@@ -30,6 +31,8 @@ const marketingPhrases = [
 ];
 
 export default function RegisterPage() {
+  useDocumentTitle("Create your account");
+
   const [currentQuote, setCurrentQuote] = useState(marketingPhrases[0]);
   const [quoteIndex, setQuoteIndex] = useState(0);
 
@@ -46,7 +49,7 @@ export default function RegisterPage() {
   }, [quoteIndex]);
 
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
+    <div className="grid  min-h-svh lg:grid-cols-2">
       <div className="flex justify-center items-center lg:w-full w-screen">
         <RegisterForm />
       </div>

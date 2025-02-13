@@ -73,9 +73,7 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="name">
-                    Name <span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel htmlFor="name">Name</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -101,9 +99,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="email">
-                    Email <span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel htmlFor="email">Email</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -129,9 +125,7 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">
-                    Password <span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -177,7 +171,7 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="confirmPassword">
-                    Confirm Password <span className="text-destructive">*</span>
+                    Confirm Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">

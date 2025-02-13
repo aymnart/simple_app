@@ -80,7 +80,7 @@ export function LoginForm() {
     >
       <Form {...form}>
         <form
-          className="flex flex-col gap-10 p-4"
+          className="flex flex-col gap-8"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="grid gap-6">
@@ -109,9 +109,7 @@ export function LoginForm() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="email">
-                        Email <span className="text-destructive">*</span>
-                      </FormLabel>
+                      <FormLabel htmlFor="email">Email</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -141,9 +139,7 @@ export function LoginForm() {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center justify-between">
-                        <FormLabel htmlFor="password">
-                          Password <span className="text-destructive">*</span>
-                        </FormLabel>
+                        <FormLabel htmlFor="password">Password</FormLabel>
                         <Link
                           href="/auth/reset"
                           className="text-xs text-primary hover:underline"

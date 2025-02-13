@@ -37,12 +37,12 @@ export const Input = React.forwardRef(
         {error ? (
           <AlertCircle
             size={18}
-            className="absolute right-2 bottom-7 bg-background text-destructive"
+            className="absolute right-2 bottom-7 rounded-full bg-background text-destructive"
           />
         ) : isValid ? (
           <CheckCircle2
             size={18}
-            className="absolute right-2 bottom-7 bg-background text-success"
+            className="absolute right-2 bottom-7 rounded-full bg-background text-success"
           />
         ) : null}
       </div>

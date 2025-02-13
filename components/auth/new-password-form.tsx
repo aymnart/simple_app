@@ -71,9 +71,7 @@ export function NewPasswordForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">
-                    Password <span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -119,7 +117,7 @@ export function NewPasswordForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="confirmPassword">
-                    Confirm Password <span className="text-destructive">*</span>
+                    Confirm Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">

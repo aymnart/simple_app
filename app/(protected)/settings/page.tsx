@@ -1,19 +1,17 @@
-import React from "react";
-import { auth, signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
-export default async function SettingsPage() {
-  const session = await auth();
+import { Separator } from "@/components/ui/separator";
+import { ProfileForm } from "./profile-form";
+
+export default function SettingsProfilePage() {
   return (
-    <div>
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <Button type="submit">Sign out</Button>
-      </form>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Profile</h3>
+        <p className="text-sm text-muted-foreground">
+          This is how others will see you on the site.
+        </p>
+      </div>
+      <Separator />
+      <ProfileForm />
     </div>
   );
 }
