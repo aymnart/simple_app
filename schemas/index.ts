@@ -1,6 +1,5 @@
 import * as z from "zod";
 import { fontsList } from "@/font.config";
-
 export const NewPasswordSchema = z
   .object({
     password: z
@@ -106,18 +105,11 @@ export const notificationsFormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
   security_emails: z.boolean(),
 });
-
 export const displayFormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),
 });
-
 export const securityFormSchema = z.object({
   two_factor: z.boolean().default(false).optional(),
-});
-
-export const emailAddressSchema = z.object({
-  name: z.string(),
-  address: z.string(),
 });

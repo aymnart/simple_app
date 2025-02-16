@@ -224,3 +224,21 @@ enum MeetingMessageMethod {
   counter
   other
 }
+
+@@map("TwoFactorConfirmations")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model UserPreference {
+  id     String  @id @default(uuid())
+  userId String  @unique
+  theme  String?
+  font   String?
+  User   User[]
+
+  @@map("UserPreferences")
+}
