@@ -1,14 +1,21 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useEffect, useTransition } from "react";
 
-import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import {
   Form,
   FormControl,
@@ -22,7 +29,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { appearanceFormSchema } from "@/schemas";
 import { updateAppearancePreferences } from "@/actions/preferences";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { fontsList } from "@/data/fonts";
+import { fontMap, fontsList } from "@/font.config";
+import ModeSkeleton from "./mode-skeleton";
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
@@ -85,7 +93,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
         {/* Font Selection */}
         <FormField
           control={form.control}
@@ -95,23 +103,24 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
               <FormLabel>Font</FormLabel>
               <div className="relative w-max">
                 <FormControl>
-                  <select
+                  <Select
                     disabled={isPending}
-                    className={cn(
-                      buttonVariants({ variant: "outline" }),
-                      "w-[200px] appearance-none font-normal"
-                    )}
-                    {...field}
-                    defaultValue={defaultValues.font}
+                    value={field.value}
+                    onValueChange={field.onChange}
                   >
-                    {fontsList.map((el, index) => (
-                      <option value={el} key={index}>
-                        {el}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select font" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {fontsList.map((font, index) => (
+                        <SelectItem value={font} key={index}>
+                          <span className={fontMap[font]}>{font}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
-                <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
               </div>
               <FormDescription>
                 Set the font you want to use in the dashboard.
@@ -146,25 +155,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
                         className="sr-only"
                       />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent hover:text-accent-foreground">
-                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                      </div>
-                    </div>
-                    <span className="block w-full p-2 text-center font-normal">
-                      Light
-                    </span>
+                    <ModeSkeleton mode="light" />
                   </FormLabel>
                 </FormItem>
                 <FormItem>
@@ -176,25 +167,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
                         className="sr-only"
                       />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
-                      <div className="space-y-2 rounded-sm bg-slate-950 p-2">
-                        <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <span className="block w-full p-2 text-center font-normal">
-                      Dark
-                    </span>
+                    <ModeSkeleton mode="dark" />
                   </FormLabel>
                 </FormItem>
               </RadioGroup>
@@ -206,7 +179,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
           {isPending ? (
             <div className="flex items-center">
               <Loader className="animate-spin mr-2" />
-              Loading
+              Updating preferences
             </div>
           ) : (
             "Update preferences"

@@ -5,6 +5,11 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import {
   Form,
   FormControl,
   FormField,
@@ -21,8 +26,7 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { login } from "@/actions/login";
 import Link from "next/link";
-import { authErrorMessages } from "@/data/error-messages";
-import OTP from "../otp-input";
+import { authErrorMessages } from "@/lib/error-messages";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -90,12 +94,19 @@ export function LoginForm() {
                 control={form.control}
                 name="code"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col items-center">
+                  <FormItem className="flex flex-col items-center mt-6">
                     <FormLabel htmlFor="code">Enter your code:</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <OTP {...field} />
-                      </div>
+                      <InputOTP maxLength={6} {...field}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

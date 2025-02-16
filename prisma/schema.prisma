@@ -9,17 +9,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  password      String?
-  role          UserRole  @default(USER)
-  accounts      Account[]
-  isTwoFactorEnabled Boolean @default(false)
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?              @map("email_verified")
+  image                 String?
+  password              String?
+  role                  UserRole               @default(USER)
+  accounts              Account[]
+  preferences           UserPreference?        @relation(fields: [userPreferenceId], references: [id])
+  isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
-  @@map("users")
+  userPreferenceId      String?
+
+  @@map("Users")
 }
 
 model Account {
@@ -38,7 +41,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
+  @@map("Accounts")
 }
 
 model VerificationToken {
@@ -48,6 +51,7 @@ model VerificationToken {
   expires DateTime
 
   @@unique([email, token])
+  @@map("VerificationTokens")
 }
 
 model PasswordResetToken {
@@ -57,7 +61,9 @@ model PasswordResetToken {
   expires DateTime
 
   @@unique([email, token])
+  @@map("PasswordResetTokens")
 }
+
 model TwoFactorToken {
   id      String   @id @default(cuid())
   email   String
@@ -65,15 +71,16 @@ model TwoFactorToken {
   expires DateTime
 
   @@unique([email, token])
+  @@map("TwoFactorTokens")
 }
 
-model TwoFactorConfirmation{
-  id      String    @id @default(cuid())
-  userId  String
-  user    User      @relation(fields: [userId],references: [id] , onDelete: Cascade)
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
-
+  @@map("TwoFactorConfirmations")
 }
 
 enum UserRole {
@@ -82,8 +89,11 @@ enum UserRole {
 }
 
 model UserPreference {
-  id    String @id @default(uuid())
+  id     String @id @default(uuid())
   userId String @unique
-  theme String
-  font  String
+  theme  String?
+  font   String?
+  User   User[]
+
+  @@map("UserPreferences")
 }

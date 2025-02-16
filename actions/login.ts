@@ -10,7 +10,7 @@ import {
 } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
-import { authErrorMessages } from "@/data/error-messages";
+import { authErrorMessages } from "@/lib/error-messages";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";

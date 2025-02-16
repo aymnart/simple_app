@@ -1,10 +1,11 @@
 "use client";
 import "@/css/not-found.css";
+import { ArrowLeft, Home } from "lucide-react";
 import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="room">
+    <section className="room">
       <div className="cuboid">
         <div className="side"></div>
         <div className="side"></div>
@@ -22,9 +23,15 @@ export default function NotFound() {
         <div className="four">4</div>
         <div className="four">4</div>
         <div className="btn">
-          <Link href="/">BACK TO HOME</Link>
+          <button onClick={() => window.history.back()}>
+            <ArrowLeft className="opacity-70" /> Back to previous page
+          </button>
+          <Link href={"/"}>
+            {" "}
+            <Home className="opacity-70" /> Home
+          </Link>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -2,31 +2,56 @@ import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Bell,
-  CreditCard,
-  LogOut,
-  Sparkles,
-  User,
-  UserCircle,
-} from "lucide-react";
+import { Bell, CreditCard, LogOut, Sparkles, UserCircle } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/actions/logout";
 import Link from "next/link";
 
+const onClick = () => {
+  logout();
+};
+const dropDownItems = [
+  {
+    icon: Sparkles,
+    label: "Upgrade to Pro",
+    href: null,
+    onClick: undefined,
+  },
+  {
+    icon: UserCircle,
+    label: "Profile",
+    href: "/settings",
+    onClick: undefined,
+  },
+  {
+    icon: CreditCard,
+    label: "Billing",
+    href: null,
+    onClick: undefined,
+  },
+  {
+    icon: Bell,
+    label: "Notifications",
+    href: null,
+    onClick: undefined,
+  },
+  {
+    icon: LogOut,
+    label: "Log out",
+    href: undefined,
+    onClick: onClick,
+  },
+];
+
 export default function UserButton() {
   const user = useCurrentUser();
-  const onClick = () => {
-    logout();
-  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,7 +63,7 @@ export default function UserButton() {
               loading="lazy"
             />
             <AvatarFallback className="rounded-lg">
-              <User />
+              {user?.name?.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -57,7 +82,7 @@ export default function UserButton() {
                 loading="lazy"
               />
               <AvatarFallback className="rounded-lg">
-                <User />
+                {user?.name?.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -69,34 +94,27 @@ export default function UserButton() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Sparkles />
-            Upgrade to Pro
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href={"/settings/account"}>
-              <UserCircle />
-              Profile
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onClick}>
-          <LogOut />
-          Log out
-        </DropdownMenuItem>
+        {dropDownItems.map((item, index) => (
+          <React.Fragment key={index}>
+            {index === 1 || index === dropDownItems.length - 1 ? (
+              <DropdownMenuSeparator />
+            ) : null}
+
+            <DropdownMenuItem asChild={!!item.href} onClick={item.onClick}>
+              {item.href ? (
+                <Link href={item.href}>
+                  {item.icon && <item.icon className="opacity-60 mr-1" />}
+                  {item.label}
+                </Link>
+              ) : (
+                <>
+                  {item.icon && <item.icon className="opacity-60 mr-1" />}
+                  {item.label}
+                </>
+              )}
+            </DropdownMenuItem>
+          </React.Fragment>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

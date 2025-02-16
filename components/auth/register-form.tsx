@@ -20,7 +20,7 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { register } from "@/actions/register";
 import { useSearchParams } from "next/navigation";
-import { authErrorMessages } from "@/data/error-messages";
+import { authErrorMessages } from "@/lib/error-messages";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();

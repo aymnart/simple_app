@@ -1,8 +1,9 @@
 import { auth } from "@/auth";
-import "./globals.css";
+import "@/css/globals.css";
 import { getUserPreferenceById } from "@/data/user";
 import { Toaster } from "@/components/ui/toaster";
-import { defaultFont, fontMap } from "@/data/fonts";
+import { defaultFont, fontMap } from "@/font.config";
+import { cn } from "@/lib/utils";
 
 export default async function RootLayout({
   children,
@@ -13,19 +14,20 @@ export default async function RootLayout({
   const user = session?.user;
   // Fetch user preferences (server-side)
   let theme = "light";
-  let font = "inter";
+  let font = "Inter";
 
   if (user?.id) {
     const userPref = await getUserPreferenceById(user.id);
     theme = userPref?.theme || "light";
-    font = userPref?.font || "inter";
-    console.log(fontMap[font]);
+    font = userPref?.font || "Inter";
   }
 
   return (
     <html lang="en" className={theme}>
-      <body className={fontMap[font] || defaultFont.className}>
-        <main>{children}</main>
+      <body
+        className={cn(fontMap[font] || defaultFont.className, "antialiased")}
+      >
+        {children}
         <Toaster />
       </body>
     </html>

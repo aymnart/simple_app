@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { displayFormSchema } from "@/schemas";
 
 const items = [
   {
@@ -43,12 +44,6 @@ const items = [
     label: "Documents",
   },
 ] as const;
-
-const displayFormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-});
 
 type DisplayFormValues = z.infer<typeof displayFormSchema>;
 
