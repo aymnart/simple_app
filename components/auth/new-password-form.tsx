@@ -87,6 +87,7 @@ export function NewPasswordForm() {
                         isValid={
                           !form.formState.errors.password && !!field.value
                         }
+                        className="pr-10"
                       />
                       <Button
                         type="button"
@@ -135,6 +136,7 @@ export function NewPasswordForm() {
                           !form.formState.errors.confirmPassword &&
                           !!field.value
                         }
+                        className="pr-10"
                       />
                     </div>
                   </FormControl>

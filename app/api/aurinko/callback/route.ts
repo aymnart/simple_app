@@ -8,25 +8,28 @@ import axios from "axios";
 
 export const GET = async (req: NextRequest) => {
   const userId = (await auth())?.user.id;
-  if (!userId)
+  if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
   const params = req.nextUrl.searchParams;
   const status = params.get("status");
-  if (status != "success")
+  if (status !== "success") {
     return NextResponse.json(
       {
         message: "Failed to link account!",
       },
       { status: 400 }
     );
+  }
   const code = params.get("code");
-  if (!code)
+  if (!code) {
     return NextResponse.json(
       {
         message: "No code provided!",
       },
       { status: 400 }
     );
+  }
 
   const token = await exchangeCodeForAccessToken(code);
   if (!token) {

@@ -24,7 +24,7 @@ import { authErrorMessages } from "@/lib/error-messages";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();
-  const authError = searchParams.get("error") as
+  const authError = searchParams?.get("error") as
     | keyof typeof authErrorMessages
     | null;
 
@@ -141,6 +141,7 @@ export function RegisterForm() {
                         isValid={
                           !form.formState.errors.password && !!field.value
                         }
+                        className="pr-10"
                       />
                       <Button
                         type="button"
@@ -189,6 +190,7 @@ export function RegisterForm() {
                           !form.formState.errors.confirmPassword &&
                           !!field.value
                         }
+                        className="pr-10"
                       />
                     </div>
                   </FormControl>

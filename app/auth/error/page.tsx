@@ -1,3 +1,4 @@
+"use client";
 import ErrorCard from "@/components/auth/error-card";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { AlertCircle } from "lucide-react";

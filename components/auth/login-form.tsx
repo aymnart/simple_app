@@ -174,6 +174,7 @@ export function LoginForm() {
                             isValid={
                               !form.formState.errors.password && !!field.value
                             }
+                            className="pr-10"
                           />
                           <Button
                             type="button"

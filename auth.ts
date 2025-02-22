@@ -9,7 +9,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/auth/login",
-    error: "auth/error",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {
@@ -22,11 +22,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       //Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
-      if (!user.id) return false;
+      if (account?.provider !== "credentials") {
+        return true;
+      }
+      if (!user.id) {
+        return false;
+      }
       const existingUser = await getUserById(user.id);
       //prevent signIn without email verification
-      if (!existingUser?.emailVerified) return false;
+      if (!existingUser?.emailVerified) {
+        return false;
+      }
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
@@ -54,9 +60,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async jwt({ token }) {
-      if (!token.sub) return token;
+      if (!token.sub) {
+        return token;
+      }
       const existingUser = await getUserById(token.sub);
-      if (!existingUser) return token;
+      if (!existingUser) {
+        return token;
+      }
       token.role = existingUser.role;
       return token;
     },

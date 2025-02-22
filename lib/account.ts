@@ -26,8 +26,12 @@ export class Account {
     pageToken?: string;
   }) {
     const params: Record<string, string> = {};
-    if (deltaToken) params.deltaToken = deltaToken;
-    if (pageToken) params.pageToken = pageToken;
+    if (deltaToken) {
+      params.deltaToken = deltaToken;
+    }
+    if (pageToken) {
+      params.pageToken = pageToken;
+    }
     const response = await axios.get<SyncUpdatedResponse>(
       "https://api.aurinko.io/v1/email/sync/updated",
       {

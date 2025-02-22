@@ -9,11 +9,11 @@ export async function syncEmailsToDatabase(
   console.log("Attempting to sync emails to database :>> ", emails);
 
   try {
-    Promise.all(
+    await Promise.all(
       emails.map((email, index) => upsertEmail(email, accountId, index))
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error syncing emails to database:", error);
   }
 }
 

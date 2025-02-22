@@ -14,7 +14,7 @@ const eslintConfig = [
   {
     rules: {
       semi: ["error", "always"],
-      indent: ["error", 2],
+
       "no-unused-vars": "warn",
       eqeqeq: ["error", "always"],
       curly: ["error", "all"],

@@ -7,10 +7,12 @@ export const Input = React.forwardRef(
     {
       error,
       isValid,
+      className,
       ...props
     }: React.InputHTMLAttributes<HTMLInputElement> & {
       error?: string; // Error message or undefined
       isValid?: boolean; // Success state
+      className?: string;
     },
     ref: React.Ref<HTMLInputElement>
   ) => {
@@ -27,7 +29,8 @@ export const Input = React.forwardRef(
               ? "border-destructive focus-visible:ring-destructive shadow-[0px_2.4px_0px_0px_hsl(var(--destructive))]"
               : isValid
               ? "border-success focus-visible:ring-success shadow-[0px_2.4px_0px_0px_hsl(var(--success))] "
-              : "border-border focus-visible:ring-ring shadow-[0px_2.4px_0px_0px_hsl(var(--input))]"
+              : "border-border focus-visible:ring-ring shadow-[0px_2.4px_0px_0px_hsl(var(--input))]",
+            className
           )}
           aria-invalid={!!error}
           aria-describedby={error ? "input-error" : undefined}
