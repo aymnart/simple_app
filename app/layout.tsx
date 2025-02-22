@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import "@/css/globals.css";
+import "./globals.css";
 import { getUserPreferenceById } from "@/data/user";
 import { Toaster } from "@/components/ui/toaster";
 import { defaultFont, fontMap } from "@/font.config";

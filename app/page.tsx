@@ -3,6 +3,7 @@ import React from "react";
 import { LoginButton } from "@/components/auth/login-button";
 import Divider from "@/components/ui/divider";
 import { Quote } from "lucide-react";
+import LinkAccountButton from "@/components/link-account-button";
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
           />
         </Divider>
       </div>
+      <LinkAccountButton />
     </main>
   );
 }

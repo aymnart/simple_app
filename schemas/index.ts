@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { fontsList } from "@/font.config";
+
 export const NewPasswordSchema = z
   .object({
     password: z
@@ -15,12 +16,14 @@ export const NewPasswordSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
 export const ResetSchema = z.object({
   email: z
     .string()
     .nonempty("Email is required")
     .email("Invalid email address"),
 });
+
 export const LoginSchema = z.object({
   email: z
     .string()
@@ -32,6 +35,7 @@ export const LoginSchema = z.object({
     .min(6, { message: "Minimum 6 characters required!" }),
   code: z.optional(z.string()),
 });
+
 export const RegisterSchema = z
   .object({
     email: z
@@ -102,11 +106,18 @@ export const notificationsFormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
   security_emails: z.boolean(),
 });
+
 export const displayFormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),
 });
+
 export const securityFormSchema = z.object({
   two_factor: z.boolean().default(false).optional(),
+});
+
+export const emailAddressSchema = z.object({
+  name: z.string(),
+  address: z.string(),
 });
