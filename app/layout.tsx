@@ -4,6 +4,7 @@ import { getUserPreferenceById } from "@/data/user";
 import { Toaster } from "@/components/ui/toaster";
 import { defaultFont, fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
+import { TRPCReactProvider } from "@/trpc/react";
 
 export default async function RootLayout({
   children,
@@ -12,10 +13,10 @@ export default async function RootLayout({
 }) {
   const session = await auth();
   const user = session?.user;
-  // Fetch user preferences (server-side)
   let theme = "light";
   let font = "Inter";
 
+  // Fetch user preferences (server-side)
   if (user?.id) {
     const userPref = await getUserPreferenceById(user.id);
     theme = userPref?.theme || "light";
@@ -27,8 +28,10 @@ export default async function RootLayout({
       <body
         className={cn(fontMap[font] || defaultFont.className, "antialiased")}
       >
-        {children}
-        <Toaster />
+        <TRPCReactProvider>
+          {children}
+          <Toaster />
+        </TRPCReactProvider>
       </body>
     </html>
   );

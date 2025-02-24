@@ -32,7 +32,7 @@ model Account {
   id                String         @id @default(cuid())
   userId            String         @map("user_id")
   name              String?
-  email             String
+  email             String?
   type              String?
   provider          String?
   providerAccountId String?        @map("provider_account_id")
@@ -132,6 +132,7 @@ model Thread {
   @@index([draftStatus])
   @@index([sentStatus])
   @@index([lastMessageDate])
+  @@map("Threads")
 }
 
 model Email {
@@ -172,6 +173,7 @@ model Email {
   @@index([threadId])
   @@index([emailLabel])
   @@index([sentAt])
+  @@map("Emails")
 }
 
 enum EmailLabel {
@@ -195,6 +197,7 @@ model EmailAddress {
   account   Account @relation(fields: [accountId], references: [id])
 
   @@unique([accountId, address])
+  @@map("EmailAddresses")
 }
 
 model EmailAttachment {
@@ -208,6 +211,8 @@ model EmailAttachment {
   contentLocation String?
   Email           Email   @relation(fields: [emailId], references: [id])
   emailId         String
+
+  @@map("EmailAttachments")
 }
 
 enum Sensitivity {

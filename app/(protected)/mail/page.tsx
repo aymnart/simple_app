@@ -1,6 +1,13 @@
+"use client";
+import dynamic from "next/dynamic";
 import React from "react";
-import Mail from "./_components/mail";
-
+// import Mail from "./_components/mail";
+const Mail = dynamic(
+  () => {
+    return import("./_components/mail");
+  },
+  { ssr: false }
+);
 const MailDashboard = () => {
   return (
     <Mail
