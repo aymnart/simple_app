@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { defaultFont, fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default async function RootLayout({
   children,
@@ -28,10 +29,12 @@ export default async function RootLayout({
       <body
         className={cn(fontMap[font] || defaultFont.className, "antialiased")}
       >
-        <TRPCReactProvider>
-          {children}
-          <Toaster />
-        </TRPCReactProvider>
+        <TooltipProvider>
+          <TRPCReactProvider>
+            {children}
+            <Toaster />
+          </TRPCReactProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

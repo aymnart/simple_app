@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox, CheckboxWrapper } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -16,7 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupItem,
+  RadioItemWrapper,
+} from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { notificationsFormSchema } from "@/schemas";
@@ -64,26 +68,36 @@ export function NotificationsForm() {
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="all" />
-                    </FormControl>
                     <FormLabel className="font-normal">
-                      All new messages
+                      <RadioItemWrapper>
+                        <FormControl>
+                          <RadioGroupItem value="all" />
+                        </FormControl>
+                        All new messages
+                      </RadioItemWrapper>
                     </FormLabel>
                   </FormItem>
+
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="mentions" />
-                    </FormControl>
                     <FormLabel className="font-normal">
-                      Direct messages and mentions
+                      <RadioItemWrapper>
+                        <FormControl>
+                          <RadioGroupItem value="mentions" />
+                        </FormControl>
+                        Direct messages and mentions
+                      </RadioItemWrapper>
                     </FormLabel>
                   </FormItem>
+
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="none" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Nothing</FormLabel>
+                    <FormLabel className="font-normal">
+                      <RadioItemWrapper>
+                        <FormControl>
+                          <RadioGroupItem value="none" />
+                        </FormControl>
+                        Nothing
+                      </RadioItemWrapper>
+                    </FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -187,21 +201,26 @@ export function NotificationsForm() {
           name="mobile"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Use different settings for my mobile devices
-                </FormLabel>
-                <FormDescription>
-                  You can manage your mobile notifications in the{" "}
-                  <Link href="/examples/forms">mobile settings</Link> page.
-                </FormDescription>
-              </div>
+              <FormLabel>
+                <CheckboxWrapper>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <span>Use different settings for my mobile devices</span>
+                    <FormDescription>
+                      You can manage your mobile notifications in the{" "}
+                      <Link className="hover:underline font-semibold" href="#">
+                        mobile settings
+                      </Link>{" "}
+                      page.
+                    </FormDescription>
+                  </div>
+                </CheckboxWrapper>
+              </FormLabel>
             </FormItem>
           )}
         />

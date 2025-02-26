@@ -60,11 +60,7 @@ export const RegisterSchema = z
   });
 
 export const appearanceFormSchema = z.object({
-  theme: z
-    .enum(["light", "dark"], {
-      required_error: "Please select a theme.",
-    })
-    .optional(),
+  theme: z.string().optional(),
   font: z
     .enum(fontsList as [string, ...string[]], {
       invalid_type_error: "Select a font",

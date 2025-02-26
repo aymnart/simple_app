@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox, CheckboxWrapper } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -92,24 +92,31 @@ export function DisplayForm() {
                     return (
                       <FormItem
                         key={item.id}
-                        className="flex flex-row items-start space-x-3 space-y-0"
+                        className="flex flex-row max-w-[150px] items-start space-x-3 space-y-0"
                       >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.id])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id
-                                    )
-                                  );
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {item.label}
+                        <FormLabel className="font-normal cursor-pointer ">
+                          <CheckboxWrapper>
+                            <>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...field.value,
+                                          item.id,
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              {item.label}
+                            </>
+                          </CheckboxWrapper>
                         </FormLabel>
                       </FormItem>
                     );

@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { AppearanceForm } from "./appearance-form";
 import { getUserPreferenceById } from "@/data/user";
 import { auth } from "@/auth";
+import { fontsList } from "@/font.config";
 
 export default async function SettingsAppearancePage() {
   const session = await auth();
@@ -14,7 +15,7 @@ export default async function SettingsAppearancePage() {
   const userPreference = await getUserPreferenceById(userId);
 
   const theme = userPreference?.theme || "light";
-  const font = userPreference?.font || "inter";
+  const font = userPreference?.font || fontsList[0];
 
   return (
     <div className="space-y-6">

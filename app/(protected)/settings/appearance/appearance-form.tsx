@@ -38,7 +38,14 @@ type AppearanceFormProps = {
   theme: string;
   font: string;
 };
-
+const themes = [
+  "light",
+  "dark",
+  "modern-sage",
+  "moonlit",
+  "obsidian",
+  "obsidian-dark",
+];
 export function AppearanceForm({ theme, font }: AppearanceFormProps) {
   const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();
@@ -50,8 +57,8 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
     async function fetchPreferences() {
       if (user?.id) {
         setDefaultValues({
-          theme: theme === "light" || theme === "dark" ? theme : "light",
-          font: fontsList.includes(font) ? font : fontsList[0],
+          theme: theme,
+          font: font,
         });
       }
     }
@@ -64,23 +71,23 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
   });
 
   // Prevent rendering until default values are set (fixes hydration issue)
-  if (!defaultValues)
+  if (!defaultValues) {
     return (
       <p className="flex items-center">
         <Loader className="animate-spin h-4 w-4 mr-4" />
         Loading preferences...
       </p>
     );
+  }
 
   function onSubmit(data: AppearanceFormValues) {
     startTransition(async () => {
       try {
         await updateAppearancePreferences(data);
         toast({ title: "User preferences updated!", variant: "success" });
-        //reload the window after 1 sec so the user see the changes
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        //reload the window so the user see the changes
+
+        window.location.reload();
       } catch (error) {
         toast({
           title: "Error",
@@ -107,6 +114,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
                     disabled={isPending}
                     value={field.value}
                     onValueChange={field.onChange}
+                    defaultValue={defaultValues.font}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Select font" />
@@ -133,6 +141,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
         {/* Theme Selection */}
         <FormField
           control={form.control}
+          defaultValue={defaultValues.theme}
           name="theme"
           render={({ field }) => (
             <FormItem className="space-y-1">
@@ -144,32 +153,29 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
               <RadioGroup
                 onValueChange={field.onChange}
                 value={field.value}
-                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+                className="flex-wrap flex gap-y-12 pt-4"
               >
-                <FormItem>
-                  <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
-                    <FormControl>
-                      <RadioGroupItem
-                        disabled={isPending}
-                        value="light"
-                        className="sr-only"
+                {themes.map((theme) => (
+                  <FormItem key={theme} className="flex-1 flex-grow">
+                    <FormLabel className="cursor-pointer flex flex-col items-center space-y-2">
+                      <ModeSkeleton
+                        mode={theme}
+                        className={`transition-transform transform ${
+                          field.value === theme
+                            ? "scale-105 border-accent border-2 shadow-md shadow-accent rounded-lg"
+                            : "scale-100"
+                        }`}
                       />
-                    </FormControl>
-                    <ModeSkeleton mode="light" />
-                  </FormLabel>
-                </FormItem>
-                <FormItem>
-                  <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
-                    <FormControl>
-                      <RadioGroupItem
-                        disabled={isPending}
-                        value="dark"
-                        className="sr-only"
-                      />
-                    </FormControl>
-                    <ModeSkeleton mode="dark" />
-                  </FormLabel>
-                </FormItem>
+                      <FormControl>
+                        <RadioGroupItem
+                          disabled={isPending}
+                          value={theme}
+                          className="sr-only"
+                        />
+                      </FormControl>
+                    </FormLabel>
+                  </FormItem>
+                ))}
               </RadioGroup>
             </FormItem>
           )}
