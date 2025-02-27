@@ -61,13 +61,13 @@ export default function UserButton() {
           className="rounded-full cursor-pointer"
           asChild
         >
-          <Avatar className="h-8 w-8 rounded-lg grid place-items-center">
+          <Avatar className="h-8 w-8 rounded-lg ">
             <AvatarImage
               src={user?.image || ""}
               alt={`${user?.name || "user"}'s image`}
               loading="lazy"
             />
-            <AvatarFallback className="rounded-lg">
+            <AvatarFallback className="h-8 w-8 rounded-lg">
               {user?.name?.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -86,7 +86,7 @@ export default function UserButton() {
                 alt={`${user?.name || "user"}'s image`}
                 loading="lazy"
               />
-              <AvatarFallback className="rounded-lg">
+              <AvatarFallback className="h-8 w-8 rounded-lg">
                 {user?.name?.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>

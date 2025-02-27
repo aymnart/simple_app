@@ -30,3 +30,14 @@ export const getUserPreferenceById = async (userId: string) => {
     return null;
   }
 };
+
+export const getIsTwoFactorEnabledById = async (id: string) => {
+  try {
+    const user = await db.user.findUnique({
+      where: { id },
+    });
+    return user?.isTwoFactorEnabled;
+  } catch {
+    return undefined;
+  }
+};

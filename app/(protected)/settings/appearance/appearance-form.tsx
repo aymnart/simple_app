@@ -34,10 +34,6 @@ import ModeSkeleton from "./mode-skeleton";
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
-type AppearanceFormProps = {
-  theme: string;
-  font: string;
-};
 const themes = [
   "light",
   "dark",
@@ -46,7 +42,7 @@ const themes = [
   "obsidian",
   "obsidian-dark",
 ];
-export function AppearanceForm({ theme, font }: AppearanceFormProps) {
+export function AppearanceForm({ theme, font }: AppearanceFormValues) {
   const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();
   const [defaultValues, setDefaultValues] =
@@ -86,12 +82,11 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
         await updateAppearancePreferences(data);
         toast({ title: "User preferences updated!", variant: "success" });
         //reload the window so the user see the changes
-
         window.location.reload();
-      } catch (error) {
+      } catch {
         toast({
-          title: "Error",
-          description: (error as Error).message,
+          title: "Error updating preferences!",
+          description: "Check your connexion and try again.",
           variant: "destructive",
         });
       }
@@ -157,7 +152,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
               >
                 {themes.map((theme) => (
                   <FormItem key={theme} className="flex-1 flex-grow">
-                    <FormLabel className="cursor-pointer flex flex-col items-center space-y-2">
+                    <FormLabel className="cursor-pointer flex flex-col items-start flex-1 space-y-2 space-x-2">
                       <ModeSkeleton
                         mode={theme}
                         className={`transition-transform transform ${
@@ -188,7 +183,7 @@ export function AppearanceForm({ theme, font }: AppearanceFormProps) {
               Updating preferences
             </div>
           ) : (
-            "Update preferences"
+            "Update Preferences"
           )}
         </Button>
       </form>

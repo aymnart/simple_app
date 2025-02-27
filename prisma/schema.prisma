@@ -20,7 +20,7 @@ model User {
   password              String?
   role                  UserRole               @default(USER)
   accounts              Account[]
-  preferences           UserPreference?        @relation(fields: [userPreferenceId], references: [id])
+  preferences           UserPreference?        @relation(fields: [userPreferenceId], references: [id], onDelete: Cascade)
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
   userPreferenceId      String?

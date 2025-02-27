@@ -30,6 +30,7 @@ export default function Navbar() {
           </TooltipTrigger>
           <TooltipContent>Home</TooltipContent>
         </Tooltip>
+
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -46,7 +47,9 @@ export default function Navbar() {
           </TooltipTrigger>
           <TooltipContent>Mail</TooltipContent>
         </Tooltip>
+
         <UserButton />
+
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -63,6 +66,7 @@ export default function Navbar() {
           </TooltipTrigger>
           <TooltipContent>Settings</TooltipContent>
         </Tooltip>
+
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">

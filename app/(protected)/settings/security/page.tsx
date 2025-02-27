@@ -1,7 +1,19 @@
 import { Separator } from "@/components/ui/separator";
 import { SecurityForm } from "./security-form";
+import { auth } from "@/auth";
+import { getIsTwoFactorEnabledById } from "@/data/user";
+import { getAccountById } from "@/data/account";
 
-export default function SecurityPage() {
+export default async function SecurityPage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return <p>You need to be logged in to edit settings.</p>;
+  }
+  const account = await getAccountById(userId);
+  const isTwoAuthEnabled = await getIsTwoFactorEnabledById(userId);
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +23,10 @@ export default function SecurityPage() {
         </p>
       </div>
       <Separator />
-      <SecurityForm />
+      <SecurityForm
+        provider={account?.provider ?? undefined}
+        two_factor={isTwoAuthEnabled}
+      />
     </div>
   );
 }

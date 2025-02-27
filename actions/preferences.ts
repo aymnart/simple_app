@@ -30,5 +30,5 @@ export async function updateAppearancePreferences(
       font: validatedFields.data.font || "",
     },
   });
-  return { success: "User preferences updates successfully!" };
+  return { success: "Preferences updated successfully!" };
 }
