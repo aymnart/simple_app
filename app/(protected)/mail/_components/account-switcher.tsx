@@ -22,6 +22,7 @@ const AccountSwitcher = ({ isCollapsed }: Props) => {
   if (!data) {
     return;
   }
+  console.log("data :>> ", data);
   return (
     <Select defaultValue={accountId} onValueChange={setAccountId}>
       <SelectTrigger

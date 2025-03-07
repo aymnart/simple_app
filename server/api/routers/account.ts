@@ -7,22 +7,27 @@ export const authoriseAccountAccess = async (
   accountId: string,
   userId: string
 ) => {
-  const account = await db.account.findFirst({
-    where: {
-      id: accountId,
-      userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      access_token: true,
-    },
-  });
-  if (!account) {
-    throw new Error("Account not found!");
+  try {
+    const account = await db.account.findFirst({
+      where: {
+        id: accountId,
+        userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        access_token: true,
+      },
+    });
+    if (!account) {
+      throw new Error("Account not found!");
+    }
+    return account;
+  } catch (error) {
+    console.error("Error authorising account access:", error);
+    throw new Error("Failed to authorise account access");
   }
-  return account;
 };
 
 export const accountRouter = createTRPCRouter({
@@ -41,29 +46,36 @@ export const accountRouter = createTRPCRouter({
   getNumThreads: privateProcedure
     .input(
       z.object({
-        accountId: z.string(),
+        accountId: z.string().nonempty("Account ID cannot be empty"),
         tab: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
-        input.accountId,
-        ctx.auth.id
-      );
+      try {
+        console.log("Received input:", input); // Add logging to verify input
 
-      const filter: Prisma.ThreadWhereInput = {};
-      if (input.tab === "inbox") {
-        filter.inboxStatus = true;
-      } else if (input.tab === "draft") {
-        filter.draftStatus = true;
-      } else if (input.tab === "sent") {
-        filter.sentStatus = true;
+        const account = await authoriseAccountAccess(
+          input.accountId,
+          ctx.auth.id
+        );
+
+        const filter: Prisma.ThreadWhereInput = {};
+        if (input.tab === "inbox") {
+          filter.inboxStatus = true;
+        } else if (input.tab === "draft") {
+          filter.draftStatus = true;
+        } else if (input.tab === "sent") {
+          filter.sentStatus = true;
+        }
+        return await ctx.db.thread.count({
+          where: {
+            accountId: account.id,
+            ...filter,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching number of threads:", error);
+        throw new Error("Failed to fetch number of threads");
       }
-      return await ctx.db.thread.count({
-        where: {
-          accountId: account.id,
-          ...filter,
-        },
-      });
     }),
 });

@@ -12,7 +12,7 @@ import {
 
 export default function Navbar() {
   return (
-    <div className="fixed top-2 left-0 right-0 flex justify-center z-50">
+    <div className="fixed bottom-2 left-0 right-0 flex justify-center z-50">
       <nav className=" flex items-center justify-center space-x-4 rounded-full border bg-background p-2 shadow-lg">
         <Tooltip>
           <TooltipTrigger asChild>

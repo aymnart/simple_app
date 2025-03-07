@@ -3,7 +3,7 @@ import { FC, ReactNode } from "react";
 
 interface DividerProps {
   className?: string;
-  vertical?: boolean;
+  orientation?: "horizontal" | "vertical" | "ver" | "hor" | "v" | "h";
   fill?:
     | "foreground"
     | "primary"
@@ -25,47 +25,47 @@ const fillMapping: Record<
   foreground: {
     default: "bg-foreground",
     gradient: "to-foreground",
-    dashed: "border-foreground",
+    dashed: "border-foreground border-2 border-dashed",
   },
   border: {
     default: "bg-border",
     gradient: "to-border",
-    dashed: "border-border",
+    dashed: "border-border border-2 border-dashed",
   },
   primary: {
     default: "bg-primary",
     gradient: "to-primary",
-    dashed: "border-primary",
+    dashed: "border-primary border-2 border-dashed",
   },
   secondary: {
     default: "bg-secondary",
     gradient: "to-secondary",
-    dashed: "border-secondary",
+    dashed: "border-secondary border-2 border-dashed",
   },
   accent: {
     default: "bg-accent",
     gradient: "to-accent",
-    dashed: "border-accent",
+    dashed: "border-accent border-2 border-dashed",
   },
   warning: {
     default: "bg-warning",
     gradient: "to-warning",
-    dashed: "border-warning",
+    dashed: "border-warning border-2 border-dashed",
   },
   success: {
     default: "bg-success",
     gradient: "to-success",
-    dashed: "border-success",
+    dashed: "border-success border-2 border-dashed",
   },
   destructive: {
     default: "bg-destructive",
     gradient: "to-destructive",
-    dashed: "border-destructive ",
+    dashed: "border-destructive border-2 border-dashed",
   },
   info: {
     default: "bg-info",
     gradient: "to-info",
-    dashed: "border-info",
+    dashed: "border-info border-2 border-dashed",
   },
   // You can add more color mappings here
 };
@@ -74,7 +74,7 @@ const fillMapping: Record<
  * Divider component that renders a horizontal or vertical line with optional gradient and children.
  *
  * @param {string} className - Additional classes to apply to the divider.
- * @param {boolean} vertical - If true, the divider will be rotated to be vertical.
+ * @param {enum} orientation - can be horizontal or vertical.
  * @param {string} fill - Determines the color fill of the divider. Defaults to "foreground".
  * @param {React.ReactNode} children - Optional children to render in the center of the divider.
  * @param {string} variant - Determines the style variant of the divider. Can be "default", "gradient", or "dashed". Defaults to "default".
@@ -83,7 +83,7 @@ const fillMapping: Record<
  */
 const Divider: FC<DividerProps> = ({
   className,
-  vertical,
+  orientation = "horizontal",
   fill = "foreground",
   children,
   variant = "default",
@@ -94,98 +94,41 @@ const Divider: FC<DividerProps> = ({
   return (
     <div
       className={cn(
-        `relative flex items-center justify-center h-10 w-full ${
-          vertical && "rotate-90"
-        }`,
+        `m-2 flex items-center`,
+        "vertical".includes(orientation)
+          ? "w-10 h-full flex-col"
+          : "h-10 w-full",
         className
       )}
     >
-      <div className="absolute inset-0 flex items-center">
-        {/* *******************gradient******************* */}
-        {variant === "gradient" && (
-          <>
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] bg-gradient-to-r from-transparent",
-                fillClass.gradient
-              )}
-            />
-
-            {children && (
-              <div
-                className={cn(
-                  "gap-1 flex items-center justify-center p-1.5 rounded-full",
-                  vertical && "-rotate-90"
-                )}
-              >
-                {children}
-              </div>
-            )}
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] bg-gradient-to-l from-transparent ",
-                fillClass.gradient
-              )}
-            />
-          </>
+      <span
+        className={cn(
+          "from-transparent",
+          fillClass[variant],
+          "vertical".includes(orientation)
+            ? "w-1 h-[90%] bg-gradient-to-b"
+            : "w-[90%] h-1 bg-gradient-to-r"
         )}
-
-        {/* *******************dashed******************* */}
-        {variant === "dashed" && (
-          <>
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] border-2 border-dashed",
-                fillClass.dashed
-              )}
-            />
-            {children && (
-              <div
-                className={cn(
-                  "gap-1 flex items-center justify-center p-1.5 rounded-full",
-                  vertical && "-rotate-90"
-                )}
-              >
-                {children}
-              </div>
-            )}
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] border-2 border-dashed",
-                fillClass.dashed
-              )}
-            />
-          </>
+      />
+      {children && (
+        <div
+          className={cn(
+            "gap-1 flex items-center justify-center p-1.5 rounded-full",
+            "vertical".includes(orientation) && "flex-col"
+          )}
+        >
+          {children}
+        </div>
+      )}
+      <span
+        className={cn(
+          "from-transparent",
+          fillClass[variant],
+          "vertical".includes(orientation)
+            ? "w-1 h-[90%] bg-gradient-to-t"
+            : "w-[90%] h-1 bg-gradient-to-l"
         )}
-
-        {/* *******************default******************* */}
-        {variant === "default" && (
-          <>
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] rounded-full",
-                fillClass.default
-              )}
-            />
-            {children && (
-              <div
-                className={cn(
-                  "gap-1 flex items-center justify-center p-1.5 rounded-full",
-                  vertical && "-rotate-90"
-                )}
-              >
-                {children}
-              </div>
-            )}
-            <span
-              className={cn(
-                "w-[90%] mx-auto h-[3px] rounded-full",
-                fillClass.default
-              )}
-            />
-          </>
-        )}
-      </div>
+      />
     </div>
   );
 };

@@ -40,7 +40,9 @@ export const getAurinkoAuthUrl = async (
 ) => {
   const session = await auth();
   const userId = session?.user.id;
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
 
   const params = new URLSearchParams({
     clientId: process.env.AURINKO_CLIENT_ID as string,
