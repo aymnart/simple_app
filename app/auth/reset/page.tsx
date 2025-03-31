@@ -1,12 +1,16 @@
 "use client";
 
 import { ResetForm } from "@/components/auth/reset-form";
-import useDocumentTitle from "@/hooks/use-document-title";
 import { ShieldCheck } from "lucide-react";
+import { Metadata } from "next";
 import React from "react";
 
+export const metadata: Metadata = {
+  title: "Reset Password",
+  description: "Securely reset your password to regain access to your account.",
+};
+
 export default function ResetPage() {
-  useDocumentTitle("Forgot password?");
   return (
     <div className="flex flex-col justify-center items-center">
       <ShieldCheck size={36} />

@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import NewVerification from "@/actions/new-verification";
-import FormSuccess from "../form-success";
-import FormError from "../form-error";
+import NewVerification from "@/actions/auth/new-verification";
+import FormSuccess from "../general/form-success";
+import FormError from "../general/form-error";
 
 export default function NewVerificationForm() {
   const [error, setError] = useState<string | undefined>();

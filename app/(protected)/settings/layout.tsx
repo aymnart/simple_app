@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
-import { SidebarNav } from "./components/sidebar-nav";
+import { SidebarNav } from "@/components/settings/sidebar-nav";
 
 export const metadata: Metadata = {
   title: "Settings",
@@ -16,10 +16,7 @@ const sidebarNavItems = [
     title: "Appearance",
     href: "/settings/appearance",
   },
-  {
-    title: "Notifications",
-    href: "/settings/notifications",
-  },
+
   {
     title: "Display",
     href: "/settings/display",

@@ -20,16 +20,6 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
-export const getUserPreferenceById = async (userId: string) => {
-  try {
-    const userPreference = await db.userPreference.findUnique({
-      where: { userId: userId },
-    });
-    return userPreference;
-  } catch {
-    return null;
-  }
-};
 
 export const getIsTwoFactorEnabledById = async (id: string) => {
   try {

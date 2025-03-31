@@ -3,11 +3,7 @@
  * Public routes are accessible without authentication.
  * @type {string[]}
  */
-export const publicRoutes: string[] = [
-  "/",
-  "/auth/new-verification",
-  "/api/initial-sync/",
-];
+export const publicRoutes: string[] = ["/", "/auth/new-verification"];
 
 /**
  * An array to hold the authentication routes for the application.
@@ -34,4 +30,4 @@ export const apiAuthPrefix: string = "/api/auth";
  * The default path to redirect users after successful log in.
  * @type {string}
  */
-export const LOGIN_DEFAULT_REDIRECT: string = "/mail";
+export const LOGIN_DEFAULT_REDIRECT: string = "/settings";

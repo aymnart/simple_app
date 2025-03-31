@@ -2,8 +2,12 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { LoginButton } from "@/components/auth/login-button";
 import Divider from "@/components/ui/divider";
-import { Quote } from "lucide-react";
-import LinkAccountButton from "@/components/link-account-button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home Page",
+  description: "A simple authentication service with sign-in functionality.",
+};
 
 export default function Home() {
   return (
@@ -21,15 +25,33 @@ export default function Home() {
             sign in
           </Button>
         </LoginButton>
-        <Divider fill="destructive" variant="default">
-          <Quote
-            color="hsl(var(--destructive))"
-            fill="hsl(var(--destructive))"
-            size={18}
-          />
-        </Divider>
+        <div className="mx-auto flex  text-balance gap-4 h-96 w-[61ch] items-center justify-center">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
+          dolorum deleniti perferendis sunt perspiciatis, mollitia vel illum
+          sapiente voluptates architecto laudantium. Voluptatum, quae
+          blanditiis, non magni eaque sit autem suscipit soluta omnis odit iste
+          aperiam vero nesciunt, saepe corrupti cupiditate. Quisquam ducimus
+          laborum laboriosam ut asperiores illum sapiente? Exercitationem,
+          autem!
+          <Divider
+            styleChildren
+            orientation="v"
+            thickness={3}
+            variant="gradient"
+            className="h-[60%]"
+          >
+            <div className="rounded-full m-0 bg-current h-4 w-1.5" />
+            {/* <span className="flex mx-1 font-semibold w-max">or</span> */}
+          </Divider>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
+          dolorum deleniti perferendis sunt perspiciatis, mollitia vel illum
+          sapiente voluptates architecto laudantium. Voluptatum, quae
+          blanditiis, non magni eaque sit autem suscipit soluta omnis odit iste
+          aperiam vero nesciunt, saepe corrupti cupiditate. Quisquam ducimus
+          laborum laboriosam ut asperiores illum sapiente? Exercitationem,
+          autem!
+        </div>
       </div>
-      <LinkAccountButton />
     </main>
   );
 }

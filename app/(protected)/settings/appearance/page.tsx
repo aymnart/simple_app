@@ -1,12 +1,11 @@
 import { Separator } from "@/components/ui/separator";
-import { AppearanceForm } from "./appearance-form";
-import { getUserPreferenceById } from "@/data/user";
+import { AppearanceForm } from "@/components/settings/appearance-form";
+import { getUserPreferenceById } from "@/data/user-preference";
 import { auth } from "@/auth";
 import { fontsList } from "@/font.config";
 
 export default async function SettingsAppearancePage() {
-  const session = await auth();
-  const userId = session?.user?.id;
+  const userId = (await auth())?.user?.id;
 
   if (!userId) {
     return <p>You need to be logged in to edit preferences.</p>;

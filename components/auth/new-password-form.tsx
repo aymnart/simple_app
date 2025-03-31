@@ -12,19 +12,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { NewPasswordSchema } from "@/schemas";
+import { NewPasswordSchema } from "@/schemas/auth/new-password";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import FormError from "@/components/form-error";
-import FormSuccess from "@/components/form-success";
+import FormError from "@/components/general/form-error";
+import FormSuccess from "@/components/general/form-success";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
-import { newPassword } from "@/actions/new-password";
+import { newPassword } from "@/actions/auth/new-password";
 import { useSearchParams } from "next/navigation";
 
 export function NewPasswordForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams?.get("token");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");

@@ -5,31 +5,33 @@ import * as React from "react";
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
-const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+// Configurable constants
+const TOAST_LIMIT = 5; // Increased from 1 to allow multiple toasts
+const TOAST_REMOVE_DELAY = 5000; // Reduced from 1000000 to a more reasonable 5 seconds
 
 type ToasterToast = ToastProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  duration?: number; // Added custom duration per toast
 };
 
-const actionTypes = {
-  ADD_TOAST: "ADD_TOAST",
-  UPDATE_TOAST: "UPDATE_TOAST",
-  DISMISS_TOAST: "DISMISS_TOAST",
-  REMOVE_TOAST: "REMOVE_TOAST",
-} as const;
+type ActionType = {
+  ADD_TOAST: "ADD_TOAST";
+  UPDATE_TOAST: "UPDATE_TOAST";
+  DISMISS_TOAST: "DISMISS_TOAST";
+  REMOVE_TOAST: "REMOVE_TOAST";
+};
 
-let count = 0;
-
-function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER;
-  return count.toString();
-}
-
-type ActionType = typeof actionTypes;
+// Use a more reliable ID generation method
+const generateId = (() => {
+  let count = 0;
+  return () => {
+    count = (count + 1) % Number.MAX_SAFE_INTEGER;
+    return `toast-${Date.now()}-${count}`;
+  };
+})();
 
 type Action =
   | {
@@ -55,9 +57,10 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const addToRemoveQueue = (toastId: string) => {
+const addToRemoveQueue = (toastId: string, duration?: number) => {
   if (toastTimeouts.has(toastId)) {
-    return;
+    clearTimeout(toastTimeouts.get(toastId));
+    toastTimeouts.delete(toastId);
   }
 
   const timeout = setTimeout(() => {
@@ -66,7 +69,7 @@ const addToRemoveQueue = (toastId: string) => {
       type: "REMOVE_TOAST",
       toastId: toastId,
     });
-  }, TOAST_REMOVE_DELAY);
+  }, duration || TOAST_REMOVE_DELAY);
 
   toastTimeouts.set(toastId, timeout);
 };
@@ -90,8 +93,6 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action;
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
@@ -126,8 +127,8 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
-const listeners: Array<(state: State) => void> = [];
-
+// Implement a proper state management to avoid unexpected behavior with concurrent renders
+const listeners: Set<(state: State) => void> = new Set();
 let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action) {
@@ -137,16 +138,21 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = Omit<ToasterToast, "id">;
+interface ToastOptions
+  extends Omit<ToasterToast, "id" | "open" | "onOpenChange"> {
+  duration?: number;
+}
 
-function toast({ ...props }: Toast) {
-  const id = genId();
+function toast(options: ToastOptions) {
+  const id = generateId();
+  const { duration, ...props } = options;
 
-  const update = (props: ToasterToast) =>
+  const update = (props: Partial<ToasterToast>) =>
     dispatch({
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     });
+
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
   dispatch({
@@ -156,35 +162,76 @@ function toast({ ...props }: Toast) {
       id,
       open: true,
       onOpenChange: (open) => {
-        if (!open) dismiss();
+        if (!open) {
+          dismiss();
+        }
       },
+      duration,
     },
   });
 
+  if (duration !== 0) {
+    // Only auto-dismiss if duration is not 0
+    addToRemoveQueue(id, duration);
+  }
+
   return {
-    id: id,
+    id,
     dismiss,
     update,
   };
 }
 
+// Add variant-specific helpers
+toast.success = (options: string | Omit<ToastOptions, "variant">) => {
+  if (typeof options === "string") {
+    return toast({ description: options, variant: "success" });
+  }
+  return toast({ ...options, variant: "success" });
+};
+
+toast.error = (options: string | Omit<ToastOptions, "variant">) => {
+  if (typeof options === "string") {
+    return toast({ description: options, variant: "destructive" });
+  }
+  return toast({ ...options, variant: "destructive" });
+};
+
+toast.warning = (options: string | Omit<ToastOptions, "variant">) => {
+  if (typeof options === "string") {
+    return toast({ description: options, variant: "warning" });
+  }
+  return toast({ ...options, variant: "warning" });
+};
+
+toast.info = (options: string | Omit<ToastOptions, "variant">) => {
+  if (typeof options === "string") {
+    return toast({ description: options, variant: "info" });
+  }
+  return toast({ ...options, variant: "info" });
+};
+
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 
   React.useEffect(() => {
-    listeners.push(setState);
+    listeners.add(setState);
     return () => {
-      const index = listeners.indexOf(setState);
-      if (index > -1) {
-        listeners.splice(index, 1);
+      listeners.delete(setState);
+
+      // Clean up timeouts when component unmounts
+      if (listeners.size === 0) {
+        toastTimeouts.forEach(clearTimeout);
+        toastTimeouts.clear();
       }
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,
     toast,
     dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    clear: () => dispatch({ type: "REMOVE_TOAST" }),
   };
 }
 

@@ -18,19 +18,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useSearchParams } from "next/navigation";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/auth/login";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
-import FormError from "@/components/form-error";
-import FormSuccess from "@/components/form-success";
-import { login } from "@/actions/login";
+import FormError from "@/components/general/form-error";
+import FormSuccess from "@/components/general/form-success";
+import { login } from "@/actions/auth/login";
 import Link from "next/link";
 import { authErrorMessages } from "@/lib/error-messages";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const authError = searchParams.get("error") as
+  const authError = searchParams?.get("error") as
     | keyof typeof authErrorMessages
     | null;
 

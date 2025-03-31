@@ -9,33 +9,55 @@ datasource db {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-/////////////////////////////// User models///////////////////////////////
+/////////////////////////////// User models ///////////////////////////////
 
 model User {
-  id                    String                 @id @default(cuid())
-  name                  String?
-  email                 String?                @unique
-  emailVerified         DateTime?              @map("email_verified")
-  image                 String?
-  password              String?
-  role                  UserRole               @default(USER)
-  accounts              Account[]
-  preferences           UserPreference?        @relation(fields: [userPreferenceId], references: [id], onDelete: Cascade)
-  isTwoFactorEnabled    Boolean                @default(false)
-  twoFactorConfirmation TwoFactorConfirmation?
-  userPreferenceId      String?
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String?   @unique
+  emailVerified      DateTime? @map("email_verified")
+  image              String?
+  password           String?
+  role               UserRole  @default(USER)
+  isTwoFactorEnabled Boolean   @default(false)
 
+  // Relations
+  accounts              Account[]
+  preferences           UserPreference?        @relation("UserToPreference")
+  twoFactorConfirmation TwoFactorConfirmation?
+
+  @@index([email])
   @@map("Users")
 }
 
+model UserPreference {
+  id     String  @id @default(uuid())
+  userId String  @unique
+  theme  String?
+  font   String?
+
+  // Relations
+  user User @relation("UserToPreference", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("UserPreferences")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////// Auth models ///////////////////////////////
+
 model Account {
-  id                String         @id @default(cuid())
-  userId            String         @map("user_id")
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
   name              String?
   email             String?
   type              String?
   provider          String?
-  providerAccountId String?        @map("provider_account_id")
+  providerAccountId String? @map("provider_account_id")
   refresh_token     String?
   access_token      String?
   nextDeltaToken    String?
@@ -44,31 +66,15 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  threads           Thread[]
-  emailAddresses    EmailAddress[]
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
   @@map("Accounts")
 }
 
-enum UserRole {
-  ADMIN
-  USER
-}
-
-model UserPreference {
-  id     String  @id @default(uuid())
-  userId String  @unique
-  theme  String?
-  font   String?
-  user   User[]
-
-  @@map("UserPreferences")
-}
-
-///////////////////////////////////////////////////////////////////////////
-/////////////////////////////// Auth models///////////////////////////////
 model VerificationToken {
   id      String   @id @default(cuid())
   email   String
@@ -76,6 +82,8 @@ model VerificationToken {
   expires DateTime
 
   @@unique([email, token])
+  @@index([email])
+  @@index([expires])
   @@map("VerificationTokens")
 }
 
@@ -86,6 +94,8 @@ model PasswordResetToken {
   expires DateTime
 
   @@unique([email, token])
+  @@index([email])
+  @@index([expires])
   @@map("PasswordResetTokens")
 }
 
@@ -96,136 +106,18 @@ model TwoFactorToken {
   expires DateTime
 
   @@unique([email, token])
+  @@index([email])
+  @@index([expires])
   @@map("TwoFactorTokens")
 }
 
 model TwoFactorConfirmation {
   id     String @id @default(cuid())
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
   @@map("TwoFactorConfirmations")
-}
-
-////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////// Email Models ////////////////////////////////////
-model Thread {
-  id              String   @id @default(cuid())
-  subject         String
-  lastMessageDate DateTime
-  participantIds  String[]
-  accountId       String
-  account         Account  @relation(fields: [accountId], references: [id])
-
-  done Boolean @default(false)
-
-  inboxStatus Boolean @default(true)
-  draftStatus Boolean @default(false)
-  sentStatus  Boolean @default(false)
-
-  emails Email[]
-
-  @@index([accountId])
-  @@index([done])
-  @@index([inboxStatus])
-  @@index([draftStatus])
-  @@index([sentStatus])
-  @@index([lastMessageDate])
-  @@map("Threads")
-}
-
-model Email {
-  id                   String                @id @default(cuid())
-  threadId             String
-  thread               Thread                @relation(fields: [threadId], references: [id])
-  createdTime          DateTime
-  lastModifiedTime     DateTime
-  sentAt               DateTime
-  receivedAt           DateTime
-  internetMessageId    String
-  subject              String
-  sysLabels            String[]
-  keywords             String[]
-  sysClassifications   String[]
-  sensitivity          Sensitivity           @default(normal)
-  meetingMessageMethod MeetingMessageMethod?
-  from                 EmailAddress          @relation("FromEmail", fields: [fromId], references: [id])
-  fromId               String
-  to                   EmailAddress[]        @relation("ToEmails")
-  cc                   EmailAddress[]        @relation("CcEmails")
-  bcc                  EmailAddress[]        @relation("BccEmails")
-  replyTo              EmailAddress[]        @relation("ReplyToEmails")
-  hasAttachments       Boolean
-  body                 String?
-  bodySnippet          String?
-  attachments          EmailAttachment[]
-  inReplyTo            String?
-  references           String?
-  threadIndex          String?
-  internetHeaders      Json[]
-  nativeProperties     Json?
-  folderId             String?
-  omitted              String[]
-
-  emailLabel EmailLabel @default(inbox)
-
-  @@index([threadId])
-  @@index([emailLabel])
-  @@index([sentAt])
-  @@map("Emails")
-}
-
-enum EmailLabel {
-  inbox
-  sent
-  draft
-}
-
-model EmailAddress {
-  id            String  @id @default(cuid())
-  name          String?
-  address       String
-  raw           String?
-  sentEmails    Email[] @relation("FromEmail")
-  receivedTo    Email[] @relation("ToEmails")
-  receivedCc    Email[] @relation("CcEmails")
-  receivedBcc   Email[] @relation("BccEmails")
-  replyToEmails Email[] @relation("ReplyToEmails")
-
-  accountId String
-  account   Account @relation(fields: [accountId], references: [id])
-
-  @@unique([accountId, address])
-  @@map("EmailAddresses")
-}
-
-model EmailAttachment {
-  id              String  @id @default(cuid())
-  name            String
-  mimeType        String
-  size            Int
-  inline          Boolean
-  contentId       String?
-  content         String?
-  contentLocation String?
-  Email           Email   @relation(fields: [emailId], references: [id])
-  emailId         String
-
-  @@map("EmailAttachments")
-}
-
-enum Sensitivity {
-  normal
-  private
-  personal
-  confidential
-}
-
-enum MeetingMessageMethod {
-  request
-  reply
-  cancel
-  counter
-  other
 }

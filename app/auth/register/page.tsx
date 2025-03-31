@@ -31,7 +31,7 @@ const marketingPhrases = [
 ];
 
 export default function RegisterPage() {
-  useDocumentTitle("Create your account");
+  useDocumentTitle("Register");
 
   const [currentQuote, setCurrentQuote] = useState(marketingPhrases[0]);
   const [quoteIndex, setQuoteIndex] = useState(0);

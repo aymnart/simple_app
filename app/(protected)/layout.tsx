@@ -1,6 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import React from "react";
-import Navbar from "./_components/navbar";
+import Navbar from "@/components/navigation/navbar";
 
 export default async function ProtectedLayout({
   children,

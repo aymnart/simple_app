@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { SecurityForm } from "./security-form";
+import { SecurityForm } from "../../../../components/settings/security-form";
 import { auth } from "@/auth";
 import { getIsTwoFactorEnabledById } from "@/data/user";
 import { getAccountById } from "@/data/account";

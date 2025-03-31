@@ -12,13 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "@/schemas/auth/register";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
-import FormError from "@/components/form-error";
-import FormSuccess from "@/components/form-success";
-import { register } from "@/actions/register";
+import FormError from "@/components/general/form-error";
+import FormSuccess from "@/components/general/form-success";
+import { register } from "@/actions/auth/register";
 import { useSearchParams } from "next/navigation";
 import { authErrorMessages } from "@/lib/error-messages";
 

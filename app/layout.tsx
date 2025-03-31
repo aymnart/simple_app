@@ -1,10 +1,9 @@
 import { auth } from "@/auth";
 import "@/css/globals.css";
-import { getUserPreferenceById } from "@/data/user";
+import { getUserPreferenceById } from "@/data/user-preference";
 import { Toaster } from "@/components/ui/toaster";
 import { defaultFont, fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
-import { TRPCReactProvider } from "@/trpc/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default async function RootLayout({
@@ -30,10 +29,8 @@ export default async function RootLayout({
         className={cn(fontMap[font] || defaultFont.className, "antialiased")}
       >
         <TooltipProvider>
-          <TRPCReactProvider>
-            {children}
-            <Toaster />
-          </TRPCReactProvider>
+          {children}
+          <Toaster />
         </TooltipProvider>
       </body>
     </html>
