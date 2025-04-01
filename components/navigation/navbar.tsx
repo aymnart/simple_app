@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation";
 export default function Navbar() {
   const pathname = usePathname();
   return (
-    <nav className="z-50 w-max mx-auto flex fixed bottom-2 left-0 right-0 items-center justify-center space-x-4 rounded-lg border bg-background p-2 shadow-lg">
+    <nav className="z-50 w-max mx-auto flex fixed top-2 left-0 right-0 items-center justify-center space-x-4 rounded-lg border bg-background p-2 shadow-lg">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

@@ -9,10 +9,10 @@ export default async function ProtectedLayout({
 }) {
   return (
     <SessionProvider>
-      <div>
+      <main>
         <Navbar />
-        {children}
-      </div>
+        <section className="mt-20">{children}</section>
+      </main>
     </SessionProvider>
   );
 }

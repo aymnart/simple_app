@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import "@/css/globals.css";
 import { getUserPreferenceById } from "@/data/user-preference";
 import { Toaster } from "@/components/ui/toaster";
-import { defaultFont, fontMap } from "@/font.config";
+import { fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -11,23 +11,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  const user = session?.user;
-  let theme = "light";
-  let font = "Inter";
+  const user = (await auth())?.user;
 
   // Fetch user preferences (server-side)
-  if (user?.id) {
-    const userPref = await getUserPreferenceById(user.id);
-    theme = userPref?.theme || "light";
-    font = userPref?.font || "Inter";
+  if (!user?.id) {
+    return { error: "Unauthorized" };
   }
+
+  const userPref = await getUserPreferenceById(user.id);
+  const theme = userPref?.theme || "light";
+  const font = userPref?.font || "Inter";
 
   return (
     <html lang="en" className={theme}>
-      <body
-        className={cn(fontMap[font] || defaultFont.className, "antialiased")}
-      >
+      <body className={cn(fontMap[font], "antialiased")}>
         <TooltipProvider>
           {children}
           <Toaster />

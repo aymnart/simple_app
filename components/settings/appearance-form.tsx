@@ -34,12 +34,12 @@ import ModeSkeleton from "./mode-skeleton";
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
-const themes = [
+const themes: string[] = [
   "light",
-  "dark",
   "modern-sage",
-  "moonlit",
   "obsidian",
+  "dark",
+  "moonlit",
   "obsidian-dark",
 ];
 export function AppearanceForm({ theme, font }: AppearanceFormValues) {
@@ -152,18 +152,15 @@ export function AppearanceForm({ theme, font }: AppearanceFormValues) {
               <RadioGroup
                 onValueChange={field.onChange}
                 value={field.value}
-                className="flex-wrap flex gap-y-12 pt-4"
+                className="flex-wrap flex gap-y-12 pt-4 max-w-lg lg:max-w-full"
               >
                 {themes.map((theme) => (
                   <FormItem key={theme} className="flex-1 flex-grow">
-                    <FormLabel className="cursor-pointer flex flex-col items-start flex-1 space-y-2 space-x-2">
+                    <FormLabel className="cursor-pointer flex flex-col items-start flex-1 space-x-2">
                       <ModeSkeleton
                         mode={theme}
-                        className={`transition-transform transform ${
-                          field.value === theme
-                            ? "scale-105 border-accent border-2 shadow-md shadow-accent rounded-lg"
-                            : "scale-100"
-                        }`}
+                        selected={field.value === theme}
+                        className={`transition-transform transform`}
                       />
                       <FormControl>
                         <RadioGroupItem

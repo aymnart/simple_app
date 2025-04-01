@@ -39,5 +39,3 @@ export const fontMap: Record<string, string> = {
 };
 
 export const fontsList = Object.keys(fontMap);
-
-export const defaultFont = inter;

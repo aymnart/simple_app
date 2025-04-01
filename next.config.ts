@@ -1,10 +1,17 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
+/** @type {import('next').NextConfig} */
+const config = {
   images: {
-    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+export default config;
