@@ -6,7 +6,11 @@ import { db } from "@/lib/db";
 
 const NewVerification = async (token: string) => {
   //check if the token exists
-  const existingToken = await getVerificationTokenByToken(token);
+  const existingToken = await getVerificationTokenByToken(token, {
+    expires: true,
+    email: true,
+    id: true,
+  });
 
   if (!existingToken) {
     return { error: "Token does not exist!" };
