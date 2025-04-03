@@ -70,7 +70,10 @@ export function ProfileForm() {
   useEffect(() => {
     async function fetchUserData() {
       if (user?.id) {
-        const userData = await getUserById(user.id);
+        const userData = await getUserById(user.id, {
+          name: true,
+          email: true,
+        });
         setDefaultValues({
           name: userData?.name ?? "",
           email: userData?.email ?? "",

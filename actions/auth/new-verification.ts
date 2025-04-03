@@ -18,7 +18,10 @@ const NewVerification = async (token: string) => {
     return { error: "Token has expired!" };
   }
   //check if the user email exists
-  const existingUser = await getUserByEmail(existingToken.email);
+  const existingUser = await getUserByEmail(existingToken.email, {
+    id: true,
+    email: true,
+  });
 
   if (!existingUser) {
     return { error: "Email does not exist!" };

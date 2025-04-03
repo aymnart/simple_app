@@ -5,7 +5,7 @@ export const getUserPreferenceById = async (id: string) => {
     const userPreference = await db.userPreference.findFirst({
       where: {
         user: {
-          id: id,
+          id,
         },
       },
     });

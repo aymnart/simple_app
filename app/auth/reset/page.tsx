@@ -1,5 +1,3 @@
-"use client";
-
 import { ResetForm } from "@/components/auth/reset-form";
 import { ShieldCheck } from "lucide-react";
 import { Metadata } from "next";

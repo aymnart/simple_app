@@ -26,7 +26,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   }
 
   const { email, password, code } = validatedFields.data;
-  const existingUser = await getUserByEmail(email);
+  const existingUser = await getUserByEmail(email, {
+    id: true,
+    emailVerified: true,
+    email: true,
+    isTwoFactorEnabled: true,
+  });
 
   if (!existingUser) {
     return { error: "Invalid email or password!" };

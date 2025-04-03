@@ -6,7 +6,7 @@ import { fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense, cache } from "react";
-import { Loader2 } from "lucide-react";
+import Loading from "./loading";
 
 // App configuration constants
 const CONFIG = {
@@ -73,14 +73,8 @@ export default async function RootLayout({
           "antialiased min-h-screen bg-background text-foreground"
         )}
       >
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center h-screen w-full">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            </div>
-          }
-        >
-          <TooltipProvider delayDuration={300}>
+        <Suspense fallback={<Loading />}>
+          <TooltipProvider delayDuration={1}>
             {children}
             <Toaster />
           </TooltipProvider>

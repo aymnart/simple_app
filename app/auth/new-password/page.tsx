@@ -1,4 +1,3 @@
-"use client";
 import { NewPasswordForm } from "@/components/auth/new-password-form";
 import { Key } from "lucide-react";
 import { Metadata } from "next";
