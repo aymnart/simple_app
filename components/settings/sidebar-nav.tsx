@@ -17,9 +17,9 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav
+    <aside
       className={cn(
-        "relative flex space-x-2 text-end lg:flex-col lg:space-x-0 lg:space-y-1",
+        "relative flex space-x-2 text-end lg:flex-col lg:space-x-0 lg:space-y-1 -mx-4 overflow-x-scroll scrollbar-hide lg:w-1/5",
         className
       )}
       {...props}
@@ -39,6 +39,6 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           {item.title}
         </Link>
       ))}
-    </nav>
+    </aside>
   );
 }

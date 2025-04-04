@@ -27,11 +27,11 @@ const sidebarNavItems = [
   },
 ];
 
-interface SettingsLayoutProps {
+export default function SettingsLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+}) {
   return (
     <section className="space-y-6 p-4 md:p-10 md:block">
       <div className="space-y-0.5">
@@ -42,9 +42,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       </div>
       <Separator className="my-6" />
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-16 lg:space-y-0">
-        <aside className="-mx-4 overflow-x-scroll scrollbar-hide lg:w-1/5">
-          <SidebarNav items={sidebarNavItems} />
-        </aside>
+        <SidebarNav items={sidebarNavItems} />
         <div className="flex-1 lg:max-w-2xl">{children}</div>
       </div>
     </section>

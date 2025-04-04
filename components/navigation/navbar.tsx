@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Home, Menu, Settings } from "lucide-react";
 import UserButton from "./user-button";
 import Link from "next/link";
@@ -51,23 +51,23 @@ export default function Navbar() {
       {navItems.map((item, index) => (
         <Tooltip key={index}>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size={item.isActive ? "default" : "icon"}
+            <Link
+              href={item.href}
               className={cn(
-                "rounded-full",
-                item.isActive && "bg-primary text-primary-foreground"
+                item.isActive && "bg-primary text-primary-foreground",
+                buttonVariants({
+                  variant: "ghost",
+                  size: item.isActive ? "default" : "icon",
+                }),
+                "rounded-full"
               )}
-              asChild
             >
-              <Link href={item.href}>
-                <item.icon />
-                {item.isActive && <span>{item.label}</span>}
-                <span className="sr-only">{item.label}</span>
-              </Link>
-            </Button>
+              {item.icon && <item.icon />}
+              {item.isActive && <span>{item.label}</span>}
+              <span className="sr-only">{item.label}</span>
+            </Link>
           </TooltipTrigger>
-          <TooltipContent>{item.label}</TooltipContent>
+          {!item.isActive && <TooltipContent>{item.label}</TooltipContent>}
         </Tooltip>
       ))}
 
