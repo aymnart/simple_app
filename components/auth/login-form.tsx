@@ -27,6 +27,7 @@ import FormSuccess from "@/components/general/form-success";
 import { login } from "@/actions/auth/login";
 import Link from "next/link";
 import { authErrorMessages } from "@/lib/error-messages";
+import FormInfo from "../general/form-info";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -75,12 +76,14 @@ export function LoginForm() {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back!"
-      headerDescription="Login with your Github or Google account"
-      backButtonLabel="Don't have an account? Sign up"
+      headerLabel={showTwoFactor ? "" : "Welcome back!"}
+      headerDescription={
+        showTwoFactor ? "" : "Login using your Google or Github account."
+      }
+      backButtonLabel={showTwoFactor ? "" : "Don't have an account? Sign up"}
       backButtonHref="/auth/register"
       className="bg-transparent"
-      showSocial
+      showSocial={!showTwoFactor}
     >
       <Form {...form}>
         <form
@@ -95,7 +98,7 @@ export function LoginForm() {
                 name="code"
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-center mt-6">
-                    <FormLabel htmlFor="code">Enter your code:</FormLabel>
+                    <FormLabel htmlFor="code">Enter your 2FA code:</FormLabel>
                     <FormControl>
                       <InputOTP maxLength={6} {...field}>
                         <InputOTPGroup>
@@ -207,6 +210,10 @@ export function LoginForm() {
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
+          {showTwoFactor && (
+            <FormInfo message="A 2FA code has been sent to your email. Please enter it below to proceed." />
+          )}
+
           <Button
             className="w-full capitalize"
             type="submit"
