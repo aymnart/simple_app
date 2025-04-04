@@ -1,22 +1,22 @@
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
-export const getTwoFactorTokenByToken = async (token: string) => {
-  try {
-    const twoFactorToken = await db.twoFactorToken.findUnique({
-      where: { token },
-    });
-    return twoFactorToken;
-  } catch {
+export const getTwoFactorTokenByEmail = async <
+  T extends Prisma.TwoFactorTokenSelect
+>(
+  email: string,
+  select?: T
+): Promise<Prisma.TwoFactorTokenGetPayload<{ select: T }> | null> => {
+  if (!email) {
     return null;
   }
-};
-export const getTwoFactorTokenByEmail = async (email: string) => {
   try {
-    const twoFactorToken = await db.twoFactorToken.findFirst({
+    return await db.twoFactorToken.findFirst({
       where: { email },
+      select: select as T,
     });
-    return twoFactorToken;
-  } catch {
+  } catch (error) {
+    console.error("Error fetching two factor token by email:", error);
     return null;
   }
 };
