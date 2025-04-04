@@ -1,3 +1,4 @@
+"use server";
 import { auth } from "@/auth";
 import "@/css/globals.css";
 import { getUserPreferenceById } from "@/data/user-preference";
@@ -31,7 +32,10 @@ const getUserPreferences = cache(async (userId?: string) => {
   }
 
   try {
-    const prefs = await getUserPreferenceById(userId);
+    const prefs = await getUserPreferenceById(userId, {
+      theme: true,
+      font: true,
+    });
     return {
       theme: prefs?.theme || CONFIG.PREFERENCES.THEME,
       font: prefs?.font || CONFIG.PREFERENCES.FONT,

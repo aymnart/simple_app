@@ -1,3 +1,5 @@
+"use server";
+
 import { Separator } from "@/components/ui/separator";
 import { AppearanceForm } from "@/components/settings/appearance-form";
 import { getUserPreferenceById } from "@/data/user-preference";
@@ -11,13 +13,16 @@ export default async function SettingsAppearancePage() {
     return <p>You need to be logged in to edit preferences.</p>;
   }
 
-  const userPreference = await getUserPreferenceById(userId);
+  const userPreference = await getUserPreferenceById(userId, {
+    theme: true,
+    font: true,
+  });
 
   const theme = userPreference?.theme || "light";
   const font = userPreference?.font || fontsList[0];
 
   return (
-    <div className="space-y-6">
+    <section className="space-y-6">
       <div>
         <h3 className="text-lg font-medium">Appearance</h3>
         <p className="text-sm text-muted-foreground">
@@ -27,6 +32,6 @@ export default async function SettingsAppearancePage() {
       </div>
       <Separator />
       <AppearanceForm theme={theme} font={font} />
-    </div>
+    </section>
   );
 }

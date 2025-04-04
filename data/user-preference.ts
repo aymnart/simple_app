@@ -1,16 +1,33 @@
-import { db } from "@/lib/db";
+"use server";
 
-export const getUserPreferenceById = async (id: string) => {
+import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
+
+/**
+ * Gets user preferences by id with optimized performance
+ * @param userId The user's id
+ * @param select Optional object specifying which fields to return
+ * @returns The userPreferences or null if not found
+ */
+export const getUserPreferenceById = async <
+  T extends Prisma.UserPreferenceSelect
+>(
+  userId: string,
+  select?: T
+): Promise<Prisma.UserPreferenceGetPayload<{ select: T }> | null> => {
+  if (!userId) {
+    return null;
+  }
+
   try {
-    const userPreference = await db.userPreference.findFirst({
+    return await db.userPreference.findFirst({
       where: {
-        user: {
-          id,
-        },
+        userId,
       },
+      select: select as T,
     });
-    return userPreference;
-  } catch {
+  } catch (error) {
+    console.error("Error fetching user preferences by id:", error);
     return null;
   }
 };
