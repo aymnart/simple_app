@@ -12,7 +12,7 @@ datasource db {
 /////////////////////////////// User models ///////////////////////////////
 
 model User {
-  id                 String    @id @default(cuid())
+  id                 String    @id @default(uuid())
   name               String?
   email              String?   @unique
   emailVerified      DateTime? @map("email_verified")
@@ -20,26 +20,30 @@ model User {
   password           String?
   role               UserRole  @default(USER)
   isTwoFactorEnabled Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   // Relations
   accounts              Account[]
-  preferences           UserPreference?        @relation("UserToPreference")
+  preferences           UserPreference?
   twoFactorConfirmation TwoFactorConfirmation?
 
   @@index([email])
-  @@map("Users")
+  @@map("users")
 }
 
 model UserPreference {
-  id     String  @id @default(uuid())
-  userId String  @unique
-  theme  String?
-  font   String?
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  theme     String?
+  font      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  user User @relation("UserToPreference", fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("UserPreferences")
+  @@map("user_preferences")
 }
 
 enum UserRole {
@@ -51,32 +55,34 @@ enum UserRole {
 /////////////////////////////// Auth models ///////////////////////////////
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String  @map("user_id")
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
   name              String?
   email             String?
-  type              String?
-  provider          String?
-  providerAccountId String? @map("provider_account_id")
-  refresh_token     String?
-  access_token      String?
-  nextDeltaToken    String?
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  nextDeltaToken    String?  @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String?  @db.Text
   session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
-  @@map("Accounts")
+  @@map("accounts")
 }
 
 model VerificationToken {
-  id      String   @id @default(cuid())
+  id      String   @id @default(uuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -84,11 +90,11 @@ model VerificationToken {
   @@unique([email, token])
   @@index([email])
   @@index([expires])
-  @@map("VerificationTokens")
+  @@map("verification_tokens")
 }
 
 model PasswordResetToken {
-  id      String   @id @default(cuid())
+  id      String   @id @default(uuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -96,11 +102,11 @@ model PasswordResetToken {
   @@unique([email, token])
   @@index([email])
   @@index([expires])
-  @@map("PasswordResetTokens")
+  @@map("password_reset_tokens")
 }
 
 model TwoFactorToken {
-  id      String   @id @default(cuid())
+  id      String   @id @default(uuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -108,16 +114,17 @@ model TwoFactorToken {
   @@unique([email, token])
   @@index([email])
   @@index([expires])
-  @@map("TwoFactorTokens")
+  @@map("two_factor_tokens")
 }
 
 model TwoFactorConfirmation {
-  id     String @id @default(cuid())
-  userId String
+  id      String   @id @default(uuid())
+  userId  String   @unique
+  expires DateTime
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
-  @@map("TwoFactorConfirmations")
+  @@index([expires])
+  @@map("two_factor_confirmations")
 }
