@@ -31,17 +31,10 @@ import { updateAppearancePreferences } from "@/actions/settings/preferences";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { fontMap, fontsList } from "@/font.config";
 import ModeSkeleton from "./mode-skeleton";
+import { themes } from "@/themes.config";
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
-const themes: string[] = [
-  "light",
-  "modern-sage",
-  "obsidian",
-  "dark",
-  "moonlit",
-  "obsidian-dark",
-];
 export function AppearanceForm({ theme, font }: AppearanceFormValues) {
   const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();

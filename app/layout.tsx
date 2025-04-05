@@ -1,19 +1,21 @@
 "use server";
 import { auth } from "@/auth";
 import "@/css/globals.css";
+import "@/css/themes.css";
 import { getUserPreferenceById } from "@/data/user-preference";
 import { Toaster } from "@/components/ui/toaster";
-import { fontMap } from "@/font.config";
+import { defaultFont, fontMap } from "@/font.config";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense, cache } from "react";
 import Loading from "./loading";
+import { defaultTheme } from "@/themes.config";
 
 // App configuration constants
 const CONFIG = {
   PREFERENCES: {
-    THEME: "light",
-    FONT: "Inter",
+    THEME: defaultTheme,
+    FONT: defaultFont,
   },
   LANG: "en",
 };
