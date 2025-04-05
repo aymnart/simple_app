@@ -11,7 +11,7 @@ export default async function SecurityPage() {
   if (!userId) {
     return <p>You need to be logged in to edit settings.</p>;
   }
-  const account = await getAccountById(userId);
+  const account = await getAccountById(userId, { provider: true });
   const isTwoAuthEnabled = await getIsTwoFactorEnabledById(userId);
 
   return (
@@ -24,7 +24,7 @@ export default async function SecurityPage() {
       </div>
       <Separator />
       <SecurityForm
-        provider={account?.provider ?? undefined}
+        provider={account?.provider}
         two_factor={isTwoAuthEnabled}
       />
     </div>

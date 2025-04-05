@@ -1,12 +1,25 @@
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
-export const getAccountById = async (userId: string) => {
+export const getAccountById = async <T extends Prisma.AccountSelect>(
+  userId: string,
+  select?: T
+): Promise<Prisma.AccountGetPayload<{ select: T }> | null> => {
+  if (!userId) {
+    console.warn("Missing userId for account lookup!");
+    return null;
+  }
+
   try {
-    const account = await db.account.findFirst({
+    return await db.account.findFirst({
       where: { userId },
+      select: select as T,
     });
-    return account;
-  } catch {
+  } catch (error) {
+    console.error("Failed fetching account by userId:", {
+      userId,
+      error,
+    });
     return null;
   }
 };
