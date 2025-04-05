@@ -6,6 +6,36 @@ import { getUserById } from "@/data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
+// Separate function for 2FA validation
+async function validateTwoFactorAuth(userId: string): Promise<boolean> {
+  try {
+    const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+      userId
+    );
+
+    if (!twoFactorConfirmation) {
+      console.log(`No 2FA confirmation found for user ${userId}`);
+      return false;
+    }
+
+    const isExpired = twoFactorConfirmation.expires.getTime() < Date.now();
+
+    if (isExpired) {
+      // Clean up expired confirmation
+      await db.twoFactorConfirmation.delete({
+        where: { id: twoFactorConfirmation.id },
+      });
+      console.log(`Expired 2FA confirmation removed for user ${userId}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error validating 2FA:", error);
+    return false;
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/auth/login",
@@ -21,38 +51,49 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      //Allow OAuth without email verification
-      if (account?.provider !== "credentials") {
-        return true;
-      }
-      if (!user.id) {
-        return false;
-      }
-      const existingUser = await getUserById(user.id, {
-        emailVerified: true,
-        isTwoFactorEnabled: true,
-        id: true,
-      });
-      //prevent signIn without email verification
-      if (!existingUser?.emailVerified) {
-        return false;
-      }
+      try {
+        // Allow OAuth without email verification
+        if (account?.provider !== "credentials") {
+          return true;
+        }
 
-      if (existingUser.isTwoFactorEnabled) {
-        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          existingUser.id
-        );
-
-        if (!twoFactorConfirmation) {
+        if (!user.id) {
+          console.log("Sign-in attempted without user ID");
           return false;
         }
 
-        //Delete two factor confirmation in the next sign in
-        await db.twoFactorConfirmation.delete({
-          where: { id: twoFactorConfirmation.id },
+        const existingUser = await getUserById(user.id, {
+          emailVerified: true,
+          isTwoFactorEnabled: true,
+          id: true,
         });
+
+        if (!existingUser) {
+          console.log(`User not found: ${user.id}`);
+          return false;
+        }
+
+        // Prevent signIn without email verification
+        if (!existingUser.emailVerified) {
+          console.log(`Unverified email for user: ${user.id}`);
+          return false;
+        }
+
+        // Validate 2FA if enabled
+        if (existingUser.isTwoFactorEnabled) {
+          const is2FAValid = await validateTwoFactorAuth(existingUser.id);
+
+          if (!is2FAValid) {
+            console.log(`2FA validation failed for user: ${user.id}`);
+            return false;
+          }
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error in signIn callback:", error);
+        return false;
       }
-      return true;
     },
     async session({ token, session }) {
       if (session.user && token.sub) {

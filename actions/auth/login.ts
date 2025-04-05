@@ -14,6 +14,7 @@ import { authErrorMessages } from "@/lib/error-messages";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { twoFactorConfirmationExpiry } from "@/tokens.config";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -42,47 +43,92 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await sendVerificationEmail(email, verificationToken.token);
     return { success: "Confirmation email sent!" };
   }
-  //2fa checks
+
+  // Handle 2FA flow if enabled
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
+    // Check if user already has a valid 2FA confirmation
+    const existingConfirmation = await getTwoFactorConfirmationByUserId(
+      existingUser.id
+    );
+
+    // If there's already a valid confirmation, proceed with login without requiring a new code
+    if (existingConfirmation) {
+      try {
+        await signIn("credentials", {
+          email,
+          password,
+          redirectTo: LOGIN_DEFAULT_REDIRECT,
+        });
+        return { success: "Login successful!" };
+      } catch (error) {
+        if (error instanceof AuthError) {
+          const errorMsg =
+            authErrorMessages[error.type] || authErrorMessages.Default;
+          return { error: errorMsg };
+        }
+        throw error;
+      }
+    }
+
+    // Handle code verification if provided
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail(
         existingUser.email,
         { token: true, expires: true, id: true }
       );
+
       if (!twoFactorToken) {
         return { error: "Invalid code!" };
       }
+
       if (twoFactorToken.token !== code) {
         return { error: "Invalid code!" };
       }
+
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
       if (hasExpired) {
         return { error: "Code expired!" };
       }
+
+      // Clean up the used token
       await db.twoFactorToken.delete({
         where: { id: twoFactorToken.id },
       });
 
-      const existingConfirmation = await getTwoFactorConfirmationByUserId(
-        existingUser.id
-      );
-      if (existingConfirmation) {
-        await db.twoFactorConfirmation.delete({
-          where: { id: existingConfirmation.id },
-        });
-      }
+      // Create new 2FA confirmation
       await db.twoFactorConfirmation.create({
         data: {
           userId: existingUser.id,
+          // Add expiration for better security
+          expires: twoFactorConfirmationExpiry,
         },
       });
+
+      // Continue with login after successful 2FA
+      try {
+        await signIn("credentials", {
+          email,
+          password,
+          redirectTo: LOGIN_DEFAULT_REDIRECT,
+        });
+        return { success: "Login successful!" };
+      } catch (error) {
+        if (error instanceof AuthError) {
+          const errorMsg =
+            authErrorMessages[error.type] || authErrorMessages.Default;
+          return { error: errorMsg };
+        }
+        throw error;
+      }
     } else {
+      // No code provided, generate and send a new 2FA token
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
       await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
       return { twoFactor: true };
     }
   }
 
+  // Standard login for users without 2FA
   try {
     await signIn("credentials", {
       email,
