@@ -41,7 +41,7 @@ export const generateTwoFactorToken = async (email: string) => {
 export const generatePasswordResetToken = async (email: string) => {
   const token = uuidv4();
 
-  const existingToken = await getPasswordResetTokenByEmail(email);
+  const existingToken = await getPasswordResetTokenByEmail(email, { id: true });
   if (existingToken) {
     await db.passwordResetToken.delete({
       where: { id: existingToken.id },

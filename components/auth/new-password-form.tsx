@@ -28,6 +28,7 @@ export function NewPasswordForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+
   const form = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
     mode: "onChange",
@@ -48,39 +49,45 @@ export function NewPasswordForm() {
     startTransition(() => {
       newPassword(values, token).then((data) => {
         setError(data?.error);
-        setSuccess(data?.success);
+        setSuccess(
+          data?.success && data?.success + " Redirecting to login page..."
+        );
+
+        if (data?.success) {
+          setTimeout(() => {
+            window.location.href = "/auth/login";
+          }, 2500);
+        }
       });
     });
   };
 
   return (
     <CardWrapper
-      headerLabel="Enter a new password"
-      backButtonLabel="Back to login"
+      headerLabel="Reset Your Password"
+      headerDescription="Please enter and confirm your new password below."
+      backButtonLabel="<-- Back to login"
       backButtonHref="/auth/login"
     >
       <Form {...form}>
-        <form
-          className={"flex flex-col gap-10"}
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <div className="grid gap-6">
-            {/* ---------------Password------------------ */}
+        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-4">
+            {/* Password Field */}
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <FormLabel htmlFor="password">New Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         id="password"
                         {...field}
-                        placeholder="*******"
+                        placeholder="Enter your new password"
                         type={showPassword ? "text" : "password"}
                         autoComplete="new-password"
-                        aria-label="Password input"
+                        aria-label="New password input"
                         disabled={isPending}
                         minLength={6}
                         error={form.formState.errors.password?.message}
@@ -91,9 +98,9 @@ export function NewPasswordForm() {
                       />
                       <Button
                         type="button"
-                        variant="link"
-                        size="icon"
-                        className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -111,24 +118,24 @@ export function NewPasswordForm() {
                 </FormItem>
               )}
             />
-            {/* ---------------Confirm Password------------------ */}
+            {/* Confirm Password Field */}
             <FormField
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="confirmPassword">
-                    Confirm Password
+                    Confirm New Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         id="confirmPassword"
                         {...field}
-                        placeholder="*******"
-                        type={"password"}
+                        placeholder="Re-enter your new password"
+                        type="password"
                         autoComplete="new-password"
-                        aria-label="Confirm Password input"
+                        aria-label="Confirm password input"
                         disabled={isPending}
                         minLength={6}
                         error={form.formState.errors.confirmPassword?.message}
@@ -144,10 +151,11 @@ export function NewPasswordForm() {
                 </FormItem>
               )}
             />
-            {/* --------------------- */}
           </div>
+          {/* Error and Success Messages */}
           <FormError message={error} />
           <FormSuccess message={success} />
+          {/* Submit Button */}
           <Button
             className="w-full capitalize"
             type="submit"
@@ -156,9 +164,10 @@ export function NewPasswordForm() {
             {isPending ? (
               <span className="flex gap-2 items-center justify-center transition-all">
                 <Loader className="animate-spin" />
+                Submitting...
               </span>
             ) : (
-              "Reset password"
+              "Reset Password"
             )}
           </Button>
         </form>
@@ -166,102 +175,3 @@ export function NewPasswordForm() {
     </CardWrapper>
   );
 }
-
-// <CardWrapper
-//   headerLabel="Welcome back!"
-//   backButtonLabel="Don't have an account?"
-//   backButtonHref="/auth/register"
-//   showSocial
-// >
-//   <Form {...form}>
-//     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-//       <div className="space-y-4">
-//         <FormField
-//           control={form.control}
-//           name="email"
-//           render={({ field }) => (
-//             <FormItem>
-//               <FormLabel>Email</FormLabel>
-//               <FormControl>
-//                 <div className="relative">
-//                   <Input
-//                     {...field}
-//                     placeholder="name@example.com"
-//                     type="email"
-//                     autoComplete="email"
-//                     aria-label="Email input"
-//                     required
-//                     disabled={isPending}
-//                     error={form.formState.errors.email?.message}
-//                     isValid={!form.formState.errors.email && !!field.value}
-//                   />
-//                 </div>
-//               </FormControl>
-//               <FormMessage />
-//             </FormItem>
-//           )}
-//         />
-//         {/* ------------------ */}
-//         <FormField
-//           control={form.control}
-//           name="password"
-//           render={({ field }) => (
-//             <FormItem>
-//               <FormLabel>Password</FormLabel>
-//               <FormControl>
-//                 <div className="relative">
-//                   <Input
-//                     {...field}
-//                     placeholder="******"
-//                     type={showPassword ? "text" : "password"}
-//                     autoComplete="password"
-//                     aria-label="Password input"
-//                     required
-//                     disabled={isPending}
-//                     minLength={6}
-//                     error={form.formState.errors.password?.message}
-//                     isValid={
-//                       !form.formState.errors.password && !!field.value
-//                     }
-//                   />
-//                   <Button
-//                     type="button"
-//                     variant="ghost"
-//                     size="sm"
-//                     className="absolute right-2 top-1/2 -translate-y-1/2"
-//                     onClick={() => setShowPassword(!showPassword)}
-//                   >
-//                     {showPassword ? (
-//                       <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
-//                     ) : (
-//                       <EyeIcon className="h-4 w-4" aria-hidden="true" />
-//                     )}
-//                     <span className="sr-only">
-//                       {showPassword ? "Hide password" : "Show password"}
-//                     </span>
-//                   </Button>
-//                 </div>
-//               </FormControl>
-//               <FormMessage />
-//             </FormItem>
-//           )}
-//         />
-//       </div>
-//       <FormError message={error} />
-//       <FormSuccess message={success} />
-//       <Button
-//         className="w-full capitalize"
-//         type="submit"
-//         disabled={isPending}
-//       >
-//         {isPending ? (
-//           <span className="flex gap-2 items-center justify-center transition-all">
-//             <Loader className="animate-spin" /> Submitting...
-//           </span>
-//         ) : (
-//           "Login"
-//         )}
-//       </Button>
-//     </form>
-//   </Form>
-// </CardWrapper>
