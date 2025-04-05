@@ -10,7 +10,8 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 async function validateTwoFactorAuth(userId: string): Promise<boolean> {
   try {
     const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-      userId
+      userId,
+      { expires: true, id: true }
     );
 
     if (!twoFactorConfirmation) {

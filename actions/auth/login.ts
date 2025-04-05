@@ -48,7 +48,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     // Check if user already has a valid 2FA confirmation
     const existingConfirmation = await getTwoFactorConfirmationByUserId(
-      existingUser.id
+      existingUser.id,
+      { id: true }
     );
 
     // If there's already a valid confirmation, proceed with login without requiring a new code
