@@ -9,12 +9,13 @@ import {
   generateVerificationToken,
 } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
-import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
+import { sendTwoFactorTokenEmail } from "@/emails/two-factor";
 import { authErrorMessages, AuthErrorType } from "@/lib/error-messages";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { twoFactorConfirmationExpiry } from "@/tokens.config";
+import { sendVerificationEmail } from "@/emails/email-verification";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -29,6 +30,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   const { email, password, code } = validatedFields.data;
   const existingUser = await getUserByEmail(email, {
     id: true,
+    name: true,
     emailVerified: true,
     email: true,
     isTwoFactorEnabled: true,
@@ -40,7 +42,11 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(email);
-    await sendVerificationEmail(email, verificationToken.token);
+    await sendVerificationEmail(
+      existingUser.name,
+      email,
+      verificationToken.token
+    );
     return { success: "Confirmation email sent!" };
   }
 
@@ -126,7 +132,11 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     } else {
       // No code provided, generate and send a new 2FA token
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+      await sendTwoFactorTokenEmail(
+        existingUser.name,
+        twoFactorToken.email,
+        twoFactorToken.token
+      );
       return { twoFactor: true };
     }
   }
