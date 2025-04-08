@@ -4,7 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { AppearanceForm } from "@/components/settings/appearance-form";
 import { getUserPreferenceById } from "@/data/user-preference";
 import { auth } from "@/auth";
-import { fontsList } from "@/font.config";
+import { defaultFont, isFontType } from "@/font.config";
+import { defaultTheme, isThemeType } from "@/themes.config";
 
 export default async function SettingsAppearancePage() {
   const userId = (await auth())?.user?.id;
@@ -17,9 +18,12 @@ export default async function SettingsAppearancePage() {
     theme: true,
     font: true,
   });
-
-  const theme = userPreference?.theme || "light";
-  const font = userPreference?.font || fontsList[0];
+  const theme = isThemeType(userPreference?.theme)
+    ? userPreference?.theme
+    : defaultTheme;
+  const font = isFontType(userPreference?.font)
+    ? userPreference?.font
+    : defaultFont;
 
   return (
     <section className="space-y-6">
