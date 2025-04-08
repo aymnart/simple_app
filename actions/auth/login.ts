@@ -10,7 +10,7 @@ import {
 } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
-import { authErrorMessages } from "@/lib/error-messages";
+import { authErrorMessages, AuthErrorType } from "@/lib/error-messages";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
@@ -64,7 +64,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       } catch (error) {
         if (error instanceof AuthError) {
           const errorMsg =
-            authErrorMessages[error.type] || authErrorMessages.Default;
+            authErrorMessages[error.type as AuthErrorType] ||
+            authErrorMessages.Default;
           return { error: errorMsg };
         }
         throw error;
@@ -116,7 +117,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       } catch (error) {
         if (error instanceof AuthError) {
           const errorMsg =
-            authErrorMessages[error.type] || authErrorMessages.Default;
+            authErrorMessages[error.type as AuthErrorType] ||
+            authErrorMessages.Default;
           return { error: errorMsg };
         }
         throw error;
@@ -140,7 +142,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   } catch (error) {
     if (error instanceof AuthError) {
       const errorMsg =
-        authErrorMessages[error.type] || authErrorMessages.Default;
+        authErrorMessages[error.type as AuthErrorType] ||
+        authErrorMessages.Default;
       return { error: errorMsg };
     }
     throw error;

@@ -54,4 +54,6 @@ export const authErrorMessages = {
   WebAuthnVerificationError:
     "There was an issue verifying the WebAuthn response. Please try again.",
   Default: "Oops something went wrong! Please try again.",
-};
+} as const;
+
+export type AuthErrorType = keyof typeof authErrorMessages;
