@@ -20,8 +20,8 @@ export default function Home() {
           simple authentication service
         </p>
 
-        <LoginButton>
-          <Button className="capitalize" variant={"secondary"} size={"lg"}>
+        <LoginButton mode="modal">
+          <Button className="capitalize" variant={"default"} size={"lg"}>
             sign in
           </Button>
         </LoginButton>
