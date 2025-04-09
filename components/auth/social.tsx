@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LOGIN_DEFAULT_REDIRECT } from "@/routes";
 import { Loader } from "lucide-react";
 import Image from "next/image";
+import Divider from "../ui/divider";
 
 export function Social() {
   const [isPending, startTransition] = useTransition();
@@ -65,11 +66,11 @@ export function Social() {
           )}
         </Button>
       </div>
-      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-        <span className="relative z-10 bg-background px-2 text-muted-foreground">
+      <Divider color="hsl(var(--border))">
+        <span className="w-max text-sm text-muted-foreground">
           Or continue with
         </span>
-      </div>
+      </Divider>
     </div>
   );
 }

@@ -21,7 +21,6 @@ const getAuthSession = cache(async () => await auth());
 const getUserPreferences = cache(
   async (userId?: string): Promise<{ theme: Theme; font: Font }> => {
     if (!userId) {
-      console.warn("user id not found!");
       return { theme: defaultTheme, font: defaultFont };
     }
 
