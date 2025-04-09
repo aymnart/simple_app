@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import NewVerification from "@/actions/auth/new-verification";
 import FormSuccess from "../general/form-success";
 import FormError from "../general/form-error";
+import { MailCheck } from "lucide-react";
 
 export default function NewVerificationForm() {
   const [error, setError] = useState<string | undefined>();
@@ -36,6 +37,7 @@ export default function NewVerificationForm() {
 
   return (
     <CardWrapper
+      icon={<MailCheck size={36} />}
       headerLabel="Confirming your verification"
       headerDescription="We're verifying your email address"
       backButtonLabel="Back to login"

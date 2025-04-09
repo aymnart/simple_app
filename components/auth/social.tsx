@@ -3,7 +3,7 @@ import React, { useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { LOGIN_DEFAULT_REDIRECT } from "@/routes";
-import { Loader } from "lucide-react";
+import { Github, Loader } from "lucide-react";
 import Image from "next/image";
 import Divider from "../ui/divider";
 
@@ -33,12 +33,7 @@ export function Social() {
             <Loader className="animate-spin h-5 w-5" />
           ) : (
             <div className="flex items-center justify-center gap-2">
-              <Image
-                src="/github.svg"
-                width={16}
-                height={16}
-                alt={"github logo"}
-              />
+              <Github />
               Github Login
             </div>
           )}

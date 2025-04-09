@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormError from "@/components/general/form-error";
 import FormSuccess from "@/components/general/form-success";
-import { Loader } from "lucide-react";
+import { Loader, ShieldCheck } from "lucide-react";
 import { reset } from "@/actions/auth/reset-password";
 
 export function ResetForm() {
@@ -45,6 +45,7 @@ export function ResetForm() {
 
   return (
     <CardWrapper
+      icon={<ShieldCheck size={36} />}
       headerLabel="Forgot your password?"
       headerDescription="Type your email and we will send you a link to reset your password."
       backButtonLabel="Back to login"

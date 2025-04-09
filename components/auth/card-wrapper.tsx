@@ -30,6 +30,7 @@ interface CardWrapperProps {
     | null
     | undefined;
   showSocial?: boolean;
+  icon?: React.ReactNode;
   className?: string;
 }
 
@@ -41,6 +42,7 @@ export function CardWrapper({
   backButtonLabel,
   backButtonVariant = "link",
   showSocial,
+  icon,
   className,
 }: CardWrapperProps) {
   return (
@@ -50,7 +52,8 @@ export function CardWrapper({
         className
       )}
     >
-      <CardHeader className="text-center mt-2">
+      <CardHeader className="text-center">
+        {icon && <div className="mb-2 mx-auto">{icon}</div>}
         <CardTitle className="text-2xl font-bold text-balance text-foreground">
           {headerLabel}
         </CardTitle>

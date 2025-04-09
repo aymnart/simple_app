@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormError from "@/components/general/form-error";
 import FormSuccess from "@/components/general/form-success";
-import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
+import { EyeIcon, EyeOffIcon, KeyRound, Loader } from "lucide-react";
 import { newPassword } from "@/actions/auth/new-password";
 import { useSearchParams } from "next/navigation";
 
@@ -64,9 +64,10 @@ export function NewPasswordForm() {
 
   return (
     <CardWrapper
+      icon={<KeyRound size={36} />}
       headerLabel="Reset Your Password"
       headerDescription="Please enter and confirm your new password below."
-      backButtonLabel="<-- Back to login"
+      backButtonLabel="Back to login"
       backButtonHref="/auth/login"
     >
       <Form {...form}>
